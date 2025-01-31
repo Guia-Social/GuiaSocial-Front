@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
+import { LinearGradient } from 'expo-linear-gradient';
 
 export function HomeScreen() {
   const navigation = useNavigation();
@@ -43,17 +44,27 @@ export function HomeScreen() {
         <View style={styles.headerLeft}>
           <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Opciones')}>
             <Image
-              source={require('../../../assets/icono-hamburguesa.png')}
+              source={require('../../../assets/menu-desplegable.png')}
               style={styles.iconMenu}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.calendar} onPress={() => navigation.navigate('Calendario')}>
-            <Text style={styles.calendarTitle}>CALENDARIO</Text>
-            <Image
-              source={require('../../../assets/Vector.png')}
-              style={styles.calendarIcon}
-            />
-          </TouchableOpacity>
+
+          {/* Degradado aplicado al borde del calendario */}
+          <LinearGradient
+            colors={['#22c55e', '#9333ea']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.gradientBorder}
+          >
+            <TouchableOpacity style={styles.calendarButton} onPress={() => navigation.navigate('Calendario')}>
+              <Text style={styles.calendarTitle}>CALENDARIO</Text>
+              <Image
+                source={require('../../../assets/flechita-desplegable-calendario.png')}
+                style={styles.calendarIcon}
+              />
+            </TouchableOpacity>
+          </LinearGradient>
+          
         </View>
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
           <Image
@@ -127,41 +138,47 @@ const styles = StyleSheet.create({
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
   },
   menuButton: {
-    marginRight: 20,
+    marginRight: 50,
   },
+
   iconMenu: {
-    width: 35,
-    height: 35,
+    width: 25,
+    height: 25,
   },
-  calendar: {
+  gradientBorder: {
+    borderRadius: 30,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginLeft: 15,
+  },
+  calendarButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'center',
-    borderWidth: 1,
-    borderColor: '#22C55E',
+    backgroundColor: '#1F1F1F',
+    borderRadius: 30,
+    paddingVertical: 6,
     paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
   },
   calendarTitle: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
     marginRight: 8,
+    
   },
   calendarIcon: {
     width: 20,
     height: 20,
+    resizeMode: 'contain'
   },
   profileButton: {
     marginLeft: 10,
   },
   profileIcon: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
   },
   eventCategories: {
     paddingHorizontal: 10,
@@ -188,31 +205,38 @@ const styles = StyleSheet.create({
   eventCard: {
     marginBottom: 20,
     backgroundColor: '#D9D9D9',
-    borderRadius: 10,
-    padding: 30,
+    borderRadius: 15,
+    padding: 0,
   },
   eventImage: {
     width: '100%',
-    height: 150,
-    borderRadius: 10,
+    borderRadius: 15,
     marginBottom: 10,
     padding: 100,
   },
   eventTitle: {
+    padding: 10,  
     color: '#000000',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   eventLocation: {
+    paddingHorizontal: 10,
     color: '#000000',
     fontSize: 14,
+    fontWeight: 'bold',
   },
   eventCity: {
+    paddingHorizontal: 10,
     color: '#000000',
     fontSize: 14,
+    fontWeight: 'bold',
   },
   eventStreet: {
+    paddingHorizontal: 10,
+    paddingVertical: 20,
     color: '#000000',
     fontSize: 14,
+    fontWeight: 'bold',
   },
 });
