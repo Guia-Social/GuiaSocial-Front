@@ -6,6 +6,8 @@ import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LoginScreen } from './src/paginas/LoginScreen';
 import { RegisterScreen } from './src/paginas/RegisterScreen';
+import { BuscarScreen } from './src/paginas/tabs/BuscarScreen';
+import AñadirScreen from './src/paginas/tabs/AñadirScreen';
 
 const Stack = createStackNavigator();
 
@@ -36,6 +38,8 @@ export default function App() {
         <Stack.Screen name="Calendario" component={CalendarScreen} />
         <Stack.Screen name="PruebaScroll" component={PruebaScroll} />
         <Stack.Screen name="SearchNearbyLocation" component={SearchNearbyLocation} />
+        <Stack.Screen name="Buscar" component={BuscarScreen} />
+        <Stack.Screen name="Añadir" component={AñadirScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
