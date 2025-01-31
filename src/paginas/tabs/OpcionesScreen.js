@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from "@expo/vector-icons"; 
 
 export function OpcionesScreen() {
   const navigation = useNavigation(); // Para navegar a la pantalla anterior
@@ -23,10 +24,7 @@ export function OpcionesScreen() {
 
       {/* Botón de Buscar */}
       <TouchableOpacity style={styles.searchButton} onPress={() => navigation.navigate('')}>
-        <Image 
-          source={require('../../../assets/lupa.png')}  
-          style={styles.searchIcon} 
-        />
+        <Ionicons name="search" size={20} color="black" style={styles.searchIcon} />
         <Text style={styles.searchButtonText}>Buscar</Text>
         <Text style={styles.eventsAvaible}>Encuentra lo que buscar entre todos los eventos disponibles.</Text>
       </TouchableOpacity>
