@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from "@expo/vector-icons"; 
+
 
 export function HomeScreen() {
   const navigation = useNavigation();
@@ -43,10 +45,7 @@ export function HomeScreen() {
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Opciones')}>
-            <Image
-              source={require('../../../assets/menu-desplegable.png')}
-              style={styles.iconMenu}
-            />
+          <Ionicons name="menu" size={40} color="#fff"></Ionicons>
           </TouchableOpacity>
 
           {/* Degradado aplicado al borde del calendario */}
@@ -58,19 +57,13 @@ export function HomeScreen() {
           >
             <TouchableOpacity style={styles.calendarButton} onPress={() => navigation.navigate('Calendario')}>
               <Text style={styles.calendarTitle}>CALENDARIO</Text>
-              <Image
-                source={require('../../../assets/flechita-desplegable-calendario.png')}
-                style={styles.calendarIcon}
-              />
+              <Ionicons name="chevron-down" size={24} color="#fff"></Ionicons>
             </TouchableOpacity>
           </LinearGradient>
           
         </View>
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
-          <Image
-            source={require('../../../assets/icono-perfil.png')}
-            style={styles.profileIcon}
-          />
+          <Ionicons name="person-circle" size={50} color="#fff"></Ionicons>
         </TouchableOpacity>
       </View>
 
@@ -125,6 +118,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingBottom: 20,
+    backgroundColor: '#23272A',
   },
   header: {
     flexDirection: 'row',
@@ -143,19 +137,19 @@ const styles = StyleSheet.create({
     marginRight: 50,
   },
 
-  iconMenu: {
-    width: 25,
-    height: 25,
-  },
   gradientBorder: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1F1F1F',
+    borderWidth: 1,
     borderRadius: 30,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginLeft: 15,
+    paddingVertical: 2,
+    paddingHorizontal: 2,
   },
   calendarButton: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#1F1F1F',
     borderRadius: 30,
     paddingVertical: 6,
@@ -168,18 +162,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     
   },
-  calendarIcon: {
-    width: 20,
-    height: 20,
-    resizeMode: 'contain'
-  },
-  profileButton: {
-    marginLeft: 10,
-  },
-  profileIcon: {
-    width: 35,
-    height: 35,
-  },
+
   eventCategories: {
     paddingHorizontal: 10,
     alignItems: 'center',
