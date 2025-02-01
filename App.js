@@ -1,9 +1,10 @@
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { CalendarScreen, HomeScreen, OpcionesScreen, ProfileScreen, PruebaScroll, SearchNearbyLocation } from './src/paginas/tabs/';
-import React, { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CalendarScreen, GastronomiaScreen, HomeScreen, OpcionesScreen, ProfileScreen, PruebaScroll, SearchNearbyLocation, BuscarScreen, 
+  AñadirScreen, TodosScreen, VidaNocturnaScreen } from './src/paginas/tabs/';
 import { LoginScreen } from './src/paginas/LoginScreen';
 import { RegisterScreen } from './src/paginas/RegisterScreen';
 
@@ -36,16 +37,12 @@ export default function App() {
         <Stack.Screen name="Calendario" component={CalendarScreen} />
         <Stack.Screen name="PruebaScroll" component={PruebaScroll} />
         <Stack.Screen name="SearchNearbyLocation" component={SearchNearbyLocation} />
+        <Stack.Screen name="Buscar" component={BuscarScreen} />
+        <Stack.Screen name="Añadir" component={AñadirScreen} />
+        <Stack.Screen name ="Todos" component={TodosScreen} />
+        <Stack.Screen name ="Gastronomia" component={GastronomiaScreen} />
+        <Stack.Screen name="vidaNocturna" component={VidaNocturnaScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });

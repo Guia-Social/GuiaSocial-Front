@@ -74,22 +74,22 @@ export function HomeScreen() {
         <TouchableOpacity style={styles.eventCategoryButton}>
           <Text style={styles.eventCategoryButtonText}>TODOS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Gastronomia')}>
           <Text style={styles.eventCategoryButtonText}>GASTRONOMÍA</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('vidaNocturna')}>
           <Text style={styles.eventCategoryButtonText}>VIDA NOCTURNA</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} >
           <Text style={styles.eventCategoryButtonText}>TURISMO</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} >
           <Text style={styles.eventCategoryButtonText}>MÚSICA</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} >
           <Text style={styles.eventCategoryButtonText}>TEATRO Y ESPECTÁCULOS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} >
           <Text style={styles.eventCategoryButtonText}>BUSCAR</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -159,10 +159,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#1F1F1F',
   },
 
+
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+
 
   menuButton: {
     marginRight: 50,
@@ -178,6 +180,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
 
+
   calendarButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -187,6 +190,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
   },
+
 
   calendarTitle: {
     color: '#fff',
@@ -204,6 +208,7 @@ const styles = StyleSheet.create({
     marginBottom: 10, // Añadimos espacio entre la cabecera y las categorías
   },
 
+
   eventCategoryButton: {
     paddingVertical: 12,
     paddingHorizontal: 25,
@@ -215,6 +220,7 @@ const styles = StyleSheet.create({
     height: 50, // Asegura que los botones tengan una altura fija
   },
 
+
   eventCategoryButtonText: {
     color: '#000000',  // Color de texto negro
     fontSize: 16,
@@ -223,10 +229,12 @@ const styles = StyleSheet.create({
     flex: 1, // Asegura que el texto ocupe todo el espacio disponible
   },
 
+
   eventList: {
     paddingHorizontal: 20,
     marginTop: 20,
   },
+
 
   eventCard: {
     marginBottom: 20,
@@ -235,11 +243,13 @@ const styles = StyleSheet.create({
     padding: 0,
   },
 
+
   eventImage: {
     width: '100%',
     borderRadius: 15,
     marginBottom: 10,
   },
+
 
   eventTitle: {
     padding: 10,
@@ -248,6 +258,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+
   eventLocation: {
     paddingHorizontal: 10,
     color: '#000000',
@@ -255,12 +266,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+
   eventCity: {
     paddingHorizontal: 10,
     color: '#000000',
     fontSize: 14,
     fontWeight: 'bold',
   },
+
 
   eventStreet: {
     paddingHorizontal: 10,

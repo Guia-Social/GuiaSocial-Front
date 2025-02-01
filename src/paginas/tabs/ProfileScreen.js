@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from '@expo/vector-icons';
 
 export function ProfileScreen() {
     const navigation = useNavigation();
@@ -9,10 +10,7 @@ export function ProfileScreen() {
       <View style={styles.container}>
         {/* Perfil de usuario */}
         <View style={styles.profileContainer}>
-            <Image
-                source={require('../../../assets/icono-perfil.png')} 
-                style={styles.profileImage}
-            />
+            <Ionicons name="person-circle" size={150} color="#fff"></Ionicons>
             <Text style={styles.userName}>Nombre de usuario</Text>
         </View>
 
