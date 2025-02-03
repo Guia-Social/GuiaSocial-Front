@@ -10,7 +10,6 @@ export function TeatroYEspectaculoScreen({ image, name, foodType, address }) {
 
   // Clasificaciones de restaurantes
   const categorias = [
-    'Todos',
     'Teatro',
     'Cine',
     'Humor',

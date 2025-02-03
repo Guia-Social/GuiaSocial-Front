@@ -33,7 +33,6 @@ export function VidaNocturnaScreen() {
 
   // Clasificaciones de restaurantes
   const categorias = [
-    'Todos',
     'Discotecas',
     'Conciertos',
     'Pub',

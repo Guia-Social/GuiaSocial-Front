@@ -10,7 +10,6 @@ export function TurismoScreen({ image, name, foodType, address }) {
 
   // Clasificaciones de restaurantes
   const categorias = [
-    'Todos',
     'Cultural',
     'Historico',
     'Sol y playa',
