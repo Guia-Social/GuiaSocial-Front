@@ -10,7 +10,6 @@ export function MusicaScreen({ image, name, foodType, address }) {
 
   // Clasificaciones de restaurantes
   const categorias = [
-    'Todos',
     'Directo',
     'Clásica',
     'Jazz',
