@@ -4,20 +4,19 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export function GastronomiaScreen({ image, name, foodType, address }) {
+export function MusicaScreen({ image, name, foodType, address }) {
   const navigation = useNavigation();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   // Clasificaciones de restaurantes
   const categorias = [
     'Todos',
-    'Asiatica',
-    'Mediterranea',
-    'Vegetariana',
-    'Carne',
-    'Mexicana',
-    'Italiana',
-    'Pescados y mariscos'
+    'Directo',
+    'Clásica',
+    'Jazz',
+    'Café concierto',
+    'Étnica',
+    'Indie'
   ];
 
   // Función para alternar la visibilidad del menú desplegable
@@ -46,8 +45,8 @@ export function GastronomiaScreen({ image, name, foodType, address }) {
           end={{ x: 1, y: 1 }}
           style={styles.gradientBorder}
         >
-          <TouchableOpacity style={styles.filterFoodButton} onPress={toggleDropdown}>
-            <Text style={styles.filterFood}>GASTRONOMÍA</Text>
+          <TouchableOpacity style={styles.filterMusicButton} onPress={toggleDropdown}>
+            <Text style={styles.filterMusicTitle}>MUSICA</Text>
             <Ionicons name={isDropdownVisible ? "chevron-up" : "chevron-down"} size={24} color="#fff" />
           </TouchableOpacity>
         </LinearGradient>
@@ -118,7 +117,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
 
-  filterFoodButton: {
+  filterMusicButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
 
-  filterFood: {
+  filterMusicTitle: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',

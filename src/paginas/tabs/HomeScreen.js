@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 
 export function HomeScreen() {
   const navigation = useNavigation();
@@ -71,25 +71,25 @@ export function HomeScreen() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.eventCategories}
       >
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Todos')}>
           <Text style={styles.eventCategoryButtonText}>TODOS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Gastronomia')}>
           <Text style={styles.eventCategoryButtonText}>GASTRONOMÍA</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('vidaNocturna')}>
           <Text style={styles.eventCategoryButtonText}>VIDA NOCTURNA</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('turismo')}>
           <Text style={styles.eventCategoryButtonText}>TURISMO</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('musica')}>
           <Text style={styles.eventCategoryButtonText}>MÚSICA</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('teatroYEspectaculo')}>
           <Text style={styles.eventCategoryButtonText}>TEATRO Y ESPECTÁCULOS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Buscar')}>
           <Text style={styles.eventCategoryButtonText}>BUSCAR</Text>
         </TouchableOpacity>
       </ScrollView>
