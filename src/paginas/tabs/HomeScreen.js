@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from "@expo/vector-icons"; 
-
+import { Ionicons } from '@expo/vector-icons';
 
 export function HomeScreen() {
   const navigation = useNavigation();
@@ -40,12 +39,11 @@ export function HomeScreen() {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      {/* Encabezado */}
+    <>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Opciones')}>
-          <Ionicons name="menu" size={40} color="#fff"></Ionicons>
+            <Ionicons name="menu" size={40} color="#fff"></Ionicons>
           </TouchableOpacity>
 
           {/* Degradado aplicado al borde del calendario */}
@@ -60,90 +58,94 @@ export function HomeScreen() {
               <Ionicons name="chevron-down" size={24} color="#fff"></Ionicons>
             </TouchableOpacity>
           </LinearGradient>
-          
         </View>
+
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
           <Ionicons name="person-circle" size={50} color="#fff"></Ionicons>
         </TouchableOpacity>
       </View>
 
-      {/* Categorías de eventos */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.eventCategories}>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+      {/* Scroll horizontal de categorías de eventos */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.eventCategories}
+      >
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Todos')}>
           <Text style={styles.eventCategoryButtonText}>TODOS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Gastronomia')}>
           <Text style={styles.eventCategoryButtonText}>GASTRONOMÍA</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('vidaNocturna')}>
           <Text style={styles.eventCategoryButtonText}>VIDA NOCTURNA</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('turismo')}>
           <Text style={styles.eventCategoryButtonText}>TURISMO</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('musica')}>
           <Text style={styles.eventCategoryButtonText}>MÚSICA</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('teatroYEspectaculo')}>
           <Text style={styles.eventCategoryButtonText}>TEATRO Y ESPECTÁCULOS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton}>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Buscar')}>
           <Text style={styles.eventCategoryButtonText}>BUSCAR</Text>
         </TouchableOpacity>
       </ScrollView>
 
       {/* Lista de eventos */}
-      <View style={styles.eventList}>
-        {eventos.map((evento) => (
-          <View key={evento.id} style={styles.eventCard}>
-            <Image
-              source={require('../../../assets/imagen-evento.png')}
-              style={styles.eventImage}
-            />
-            <Text style={styles.eventTitle}>{evento.nombre}</Text>
-            <Text style={styles.eventLocation}>{evento.lugar}</Text>
-            <Text style={styles.eventCity}>{evento.ubicacion}</Text>
-            <Text style={styles.eventStreet}>{evento.calle}</Text>
-          </View>
-        ))}
-      </View>
+      <ScrollView>
+        <View style={styles.eventList}>
+          {eventos.map((evento) => (
+            <View key={evento.id} style={styles.eventCard}>
+              <Image
+                source={require('../../../assets/imagen-evento.png')}
+                style={styles.eventImage}
+              />
+              <Text style={styles.eventTitle}>{evento.nombre}</Text>
+              <Text style={styles.eventLocation}>{evento.lugar}</Text>
+              <Text style={styles.eventCity}>{evento.ubicacion}</Text>
+              <Text style={styles.eventStreet}>{evento.calle}</Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
 
       {/* Boton localizaciones cercanas */}
-      <LinearGradient
-        colors={['#22c55e', '#9333ea']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.gradientBorderButton}
-      >
-        <TouchableOpacity style={styles.searchNearByLocationsButton} onPress={() => navigation.navigate('SearchNearbyLocation')}>
-          <View style={styles.textContainer}>
-            <Image 
+      <View style={styles.buttonLocation}>
+        {/* Degradado aplicado al borde del calendario */}
+        <LinearGradient
+          colors={['#22c55e', '#9333ea']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradientBorder}
+        >
+          <View style={styles.backgroundContainer}>
+            <Image
               source={require('../../../assets/direccion-vector.png')}
-              style={styles.iconImage}
+              style={styles.iconLocationImage}
             />
-            <View style={{ flexDirection: 'column' }}>
-              <Text style={styles.locationText}>Eventos cerca de</Text>
-              <Text style={styles.buttonText}>Sevilla - San Bernardo</Text>
+            <TouchableOpacity style={styles.containerTextButton} onPress={() => navigation.navigate('SearchNearbyLocation')}>
+              <Text style={styles.nearEvents}>Eventos cerca de</Text>
+              <Text style={styles.nearEventsLocation}>Sevilla - San Bernardo</Text>
+            </TouchableOpacity>
+            <View style={styles.iconArrowUpImageContainer}>
+              <Image
+                source={require('../../../assets/flecha.png')}
+                style={styles.iconArrowUpImage}
+              />
             </View>
-            <Image 
-              source={require('../../../assets/flecha.png')}
-              style={styles.iconArrowImage}
-            />
           </View>
-        </TouchableOpacity>
-      </LinearGradient>
-    </ScrollView>
+        </LinearGradient>
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#23272A',
-  },
-
-  scrollContainer: {
-    paddingBottom: 20,
     backgroundColor: '#23272A',
   },
 
@@ -194,24 +196,31 @@ const styles = StyleSheet.create({
   },
 
   eventCategories: {
-    paddingHorizontal: 10,
-    alignItems: 'center',
     flexDirection: 'row',
     backgroundColor: '#D9D9D9',
     paddingVertical: 10,
     borderRadius: 10,
+    paddingHorizontal: 15,
+    marginBottom: 10, // Añadimos espacio entre la cabecera y las categorías
   },
 
   eventCategoryButton: {
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 10,
+    marginRight: 15, // Espacio entre los botones
+    backgroundColor: '#ffffff', // Fondo blanco para los botones
+    justifyContent: 'center', // Centra el contenido dentro del botón
+    alignItems: 'center', // Asegura que el texto esté centrado
+    height: 50, // Asegura que los botones tengan una altura fija
   },
 
   eventCategoryButtonText: {
-    color: '#000000',
+    color: '#000000',  // Color de texto negro
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',  // Centra el texto dentro del botón
+    flex: 1, // Asegura que el texto ocupe todo el espacio disponible
   },
 
   eventList: {
@@ -230,11 +239,10 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 15,
     marginBottom: 10,
-    padding: 100,
   },
 
   eventTitle: {
-    padding: 10,  
+    padding: 10,
     color: '#000000',
     fontSize: 18,
     fontWeight: 'bold',
@@ -261,70 +269,72 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
+
+  /* Estilos boton localizacion cercana */
+  buttonLocation: {
+    borderRadius: 50,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    position: 'fixed',
+    bottom: '7%',
+    width: '90%',
+    left: '5%',
+    borderWidth: 1,
+    borderColor: 'transparent',
+    paddingVertical: 3,
+    paddingHorizontal: 3,
+    zIndex: 10000,
+  },
+
+  nearByLocationsContainerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    backgroundColor: '#2F2F2F',
+    borderRadius: 50,
+    paddingHorizontal: 35,
+    paddingVertical: 15,
+  },
+
+  backgroundContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2F2F2F',
+    borderRadius: 50,
+  },
+
+  containerTextButton: {
+    flexDirection: 'column', // Organiza los textos en una columna
+    alignItems: 'flex-start', // Centra los textos horizontalmente
+    justifyContent: 'flex-start', // Centra los textos verticalmente dentro del contenedor
+    marginHorizontal: 7, // Espaciado horizontal
+    width: '80%', // Ancho del contenedor de texto
+  },
   
-  // Estilos del boton para los eventos cercanos
-
-  // Estilo para el fondo con degradado del botón
-  gradientBorderButton: {
-    borderRadius: 30,  // Bordes redondeados
-    overflow: 'hidden', // Para asegurar que el borde redondeado se aplique
-    alignItems: 'center',  // Centra los elementos dentro del botón
-    justifyContent: 'center',  // Alinea el contenido en el centro
-    flexDirection: 'row',  // Alinea los elementos en una fila
-    position: 'absolute',
-    top: '43%',  // Ajuste de posición, lo puedes modificar según el diseño
-    width: '90%',   // Mantiene el tamaño del botón en un 90% de la pantalla
-    left: '5%',     // Centrado horizontal
-    borderWidth: 2, // Añade un borde alrededor del botón
-    borderColor: '#9333ea', // Color del borde (ajustado para dar visibilidad)
+  nearEvents: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: 'normal',
+    marginBottom: 5, // Espacio entre las líneas de texto
+    textAlign: 'center', // Centra el texto en la línea
+    marginLeft: 20,
   },
-
-  // Estilo para el botón TouchableOpacity
-  searchNearByLocationsButton: {
-    flexDirection: 'row',  // Alinea los elementos en una fila
-    alignItems: 'center',  // Alinea los iconos y texto verticalmente
-    justifyContent: 'space-between',  // Espacia los elementos
-    width: '100%',  // El botón ocupa todo el ancho disponible
-    backgroundColor: '#2F2F2F',  // Color de fondo
-    borderRadius: 20,  // Bordes redondeados
-    paddingHorizontal: 40,  // Aumenta el ancho del contenedor para hacerlo más ancho
-    paddingVertical: 15,  // Aumenta la altura del botón
+  
+  nearEventsLocation: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center', // Centra el texto en la línea
+    marginLeft: 20,
   },
-
-  // Estilo para el contenedor de los textos
-  textContainer: {
-    flexDirection: 'row',  // Alinea los iconos en una fila
-    alignItems: 'center',  // Alinea los iconos y texto verticalmente
-    width: '80%',           // Ajuste del ancho de los textos
-    justifyContent: 'space-between', // Espacio entre los elementos
+  
+  iconLocationImage: {
+    width: 16,   // Reducir el tamaño del icono
+    height: 16,  // Reducir el tamaño del icono
+    marginLeft: 10,
   },
-
-  // Estilo para el texto "Eventos cerca de"
-  locationText: {
-    fontSize: 14,  // Tamaño del texto
-    color: '#fff',  // Color blanco
-    fontWeight: 'normal',  // No en negrita
-    marginBottom: 5,  // Espacio entre el texto y el siguiente
-  },
-
-  // Estilo para el texto "Sevilla - San Bernardo"
-  buttonText: {
-    fontSize: 16,  // Tamaño del texto
-    color: '#fff',  // Color blanco
-    fontWeight: 'bold',  // En negrita
-  },
-
-  // Estilo para las imágenes dentro del botón (Dirección)
-  iconImage: {
-    width: 40,    // Ancho de la imagen
-    height: 40,   // Alto de la imagen
-    marginHorizontal: 10,  // Espacio entre los iconos y los textos
-  },
-
-  // Estilo para la imagen de la flecha
-  iconArrowImage: {
-    width: 20,    // Ancho de la imagen
-    height: 20,   // Alto de la imagen
-    resizeMode: 'contain',
-  }
 });
