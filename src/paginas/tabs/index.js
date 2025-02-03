@@ -4,7 +4,6 @@ export { OpcionesScreen } from "./OpcionesScreen";
 export { ProfileScreen } from './ProfileScreen';
 export { SearchNearbyLocation } from './SearchNearbyLocation';
 export { BuscarScreen } from './BuscarScreen';
-export { TodosScreen } from './TodosScreen';
 export { GastronomiaScreen } from './GastronomiaScreen';
 export { AñadirScreen } from './AñadirScreen';
 export { VidaNocturnaScreen } from './VidaNocturnaScreen';

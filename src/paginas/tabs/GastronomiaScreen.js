@@ -10,7 +10,6 @@ export function GastronomiaScreen({ image, name, foodType, address }) {
 
   // Clasificaciones de restaurantes
   const categorias = [
-    'Todos',
     'Asiatica',
     'Mediterranea',
     'Vegetariana',

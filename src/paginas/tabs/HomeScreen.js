@@ -40,8 +40,8 @@ export function HomeScreen() {
 
   return (
     <>
+    <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
           <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Opciones')}>
             <Ionicons name="menu" size={40} color="#fff"></Ionicons>
           </TouchableOpacity>
@@ -58,7 +58,6 @@ export function HomeScreen() {
               <Ionicons name="chevron-down" size={24} color="#fff"></Ionicons>
             </TouchableOpacity>
           </LinearGradient>
-        </View>
 
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
           <Ionicons name="person-circle" size={50} color="#fff"></Ionicons>
@@ -71,9 +70,7 @@ export function HomeScreen() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.eventCategories}
       >
-        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Todos')}>
-          <Text style={styles.eventCategoryButtonText}>TODOS</Text>
-        </TouchableOpacity>
+
         <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Gastronomia')}>
           <Text style={styles.eventCategoryButtonText}>GASTRONOMÍA</Text>
         </TouchableOpacity>
@@ -111,7 +108,7 @@ export function HomeScreen() {
           ))}
         </View>
       </ScrollView>
-
+  </View>
       {/* Boton localizaciones cercanas */}
       <View style={styles.buttonLocation}>
         {/* Degradado aplicado al borde del calendario */}
@@ -121,22 +118,22 @@ export function HomeScreen() {
           end={{ x: 1, y: 1 }}
           style={styles.gradientBorder}
         >
-          <View style={styles.backgroundContainer}>
+          <TouchableOpacity style={styles.backgroundContainer} onPress={() => navigation.navigate('SearchNearbyLocation')}>
             <Image
               source={require('../../../assets/direccion-vector.png')}
               style={styles.iconLocationImage}
             />
-            <TouchableOpacity style={styles.containerTextButton} onPress={() => navigation.navigate('SearchNearbyLocation')}>
+            <View style={styles.containerTextButton} >
               <Text style={styles.nearEvents}>Eventos cerca de</Text>
               <Text style={styles.nearEventsLocation}>Sevilla - San Bernardo</Text>
-            </TouchableOpacity>
+            </View>
             <View style={styles.iconArrowUpImageContainer}>
               <Image
                 source={require('../../../assets/flecha.png')}
                 style={styles.iconArrowUpImage}
               />
             </View>
-          </View>
+          </TouchableOpacity>
         </LinearGradient>
       </View>
     </>
@@ -154,26 +151,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 60,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingBottom: 20,
-    backgroundColor: '#1F1F1F',
+    backgroundColor: '#23272A',
   },
-
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  menuButton: {
-    marginRight: 50,
-  },
-
+ 
   gradientBorder: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1F1F1F',
+    backgroundColor: '#23272A',
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: 100,
     paddingVertical: 2,
     paddingHorizontal: 2,
   },
@@ -182,7 +170,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1F1F1F',
+    backgroundColor: '#23272A',
     borderRadius: 30,
     paddingVertical: 6,
     paddingHorizontal: 12,
@@ -198,29 +186,26 @@ const styles = StyleSheet.create({
   eventCategories: {
     flexDirection: 'row',
     backgroundColor: '#D9D9D9',
-    paddingVertical: 10,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    marginBottom: 10, // Añadimos espacio entre la cabecera y las categorías
+    paddingVertical: 20,
+    paddingHorizontal: 5,
+    marginBottom: 20, 
   },
 
   eventCategoryButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 25,
+    paddingHorizontal: 15,
     borderRadius: 10,
-    marginRight: 15, // Espacio entre los botones
-    backgroundColor: '#ffffff', // Fondo blanco para los botones
-    justifyContent: 'center', // Centra el contenido dentro del botón
-    alignItems: 'center', // Asegura que el texto esté centrado
-    height: 50, // Asegura que los botones tengan una altura fija
+    marginRight: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: 50, 
   },
 
   eventCategoryButtonText: {
-    color: '#000000',  // Color de texto negro
+    color: '#000000', 
     fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',  // Centra el texto dentro del botón
-    flex: 1, // Asegura que el texto ocupe todo el espacio disponible
+    textAlign: 'center',  
+    flex: 1, 
   },
 
   eventList: {
@@ -272,69 +257,61 @@ const styles = StyleSheet.create({
 
   /* Estilos boton localizacion cercana */
   buttonLocation: {
-    borderRadius: 50,
+    position: 'absolute',
+    bottom: 20, 
+    left: '5%',
+    width: '90%',
+    borderRadius: 100,
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    position: 'fixed',
-    bottom: '7%',
-    width: '90%',
-    left: '5%',
-    borderWidth: 1,
-    borderColor: 'transparent',
-    paddingVertical: 3,
-    paddingHorizontal: 3,
-    zIndex: 10000,
+    zIndex: 1000, 
   },
-
-  nearByLocationsContainerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    backgroundColor: '#2F2F2F',
-    borderRadius: 50,
-    paddingHorizontal: 35,
-    paddingVertical: 15,
-  },
+  
 
   backgroundContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2F2F2F',
-    borderRadius: 50,
+    backgroundColor: '#23272A',
+    borderRadius: 100,
+    paddingVertical: 10, 
+    paddingHorizontal: 16, 
   },
 
-  containerTextButton: {
-    flexDirection: 'column', // Organiza los textos en una columna
-    alignItems: 'flex-start', // Centra los textos horizontalmente
-    justifyContent: 'flex-start', // Centra los textos verticalmente dentro del contenedor
-    marginHorizontal: 7, // Espaciado horizontal
-    width: '80%', // Ancho del contenedor de texto
-  },
   
   nearEvents: {
     fontSize: 14,
     color: '#fff',
     fontWeight: 'normal',
-    marginBottom: 5, // Espacio entre las líneas de texto
-    textAlign: 'center', // Centra el texto en la línea
-    marginLeft: 20,
+    marginBottom: 5,
   },
   
   nearEventsLocation: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
-    textAlign: 'center', // Centra el texto en la línea
-    marginLeft: 20,
   },
   
-  iconLocationImage: {
-    width: 16,   // Reducir el tamaño del icono
-    height: 16,  // Reducir el tamaño del icono
-    marginLeft: 10,
-  },
+  
+iconLocationImage: {
+  width: 24,
+  height: 24,
+  resizeMode: 'contain',
+  marginRight: 20, 
+},
+
+
+iconArrowUpImageContainer: {
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 8, 
+},
+
+iconArrowUpImage: {
+  width: 24, 
+  height: 18,
+  resizeMode: 'contain', 
+  marginLeft: 12, 
+},
 });
