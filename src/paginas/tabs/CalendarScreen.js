@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 export function CalendarScreen() {
   const navigation = useNavigation();
@@ -29,10 +30,7 @@ export function CalendarScreen() {
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>Calendario</Text>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image 
-            source={require('../../../assets/boton-cerrar-opciones.png')}
-            style={styles.closeButton} 
-          />
+        <Ionicons name="close" size={50} color="black" style={styles.closeButton} />
         </TouchableOpacity>
       </View>
 
@@ -70,8 +68,9 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   closeButton: {
-    color: '#000',  
-    marginTop: 80,
+    position: 'absolute',  
+    left: -35,
+    top: 15,  
   },
   scrollContainer: {
     paddingVertical: 10,
@@ -80,8 +79,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',  
     padding: 8,
     borderRadius: 12,
-    marginVertical: 10,  // Agrega separación entre elementos
-    marginHorizontal: 20,
+    marginVertical: 10,
+    marginHorizontal: 15,
   },
   dateText: {
     color: '#000',  

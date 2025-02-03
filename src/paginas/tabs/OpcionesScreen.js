@@ -1,35 +1,36 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from "@expo/vector-icons"; 
 
 export function OpcionesScreen() {
-  const navigation = useNavigation(); // Para navegar a la pantalla anterior
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       {/* Cabecera */}
       <View style={styles.headerContainer}>
-        {/* Título de la cabecera */}
         <Text style={styles.headerTitle}>Opciones</Text>
-
-        {/* Botón de cerrar (X) */}
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image 
-            source={require('../../../assets/boton-cerrar-opciones.png')}
-            style={styles.closeButton}
-          />
+          <Ionicons name="close" size={50} color="black" style={styles.closeButton} />
         </TouchableOpacity>
       </View>
-
       {/* Botón de Buscar */}
-      <TouchableOpacity style={styles.searchButton} onPress={() => navigation.navigate('')}>
-        <Image 
-          source={require('../../../assets/lupa.png')}  
-          style={styles.searchIcon} 
-        />
-        <Text style={styles.searchButtonText}>Buscar</Text>
-        <Text style={styles.eventsAvaible}>Encuentra lo que buscar entre todos los eventos disponibles.</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Buscar')}>
+        <View style={styles.content}>
+          <Ionicons name="search" size={22} color="black" style={styles.icon} />
+          <Text style={styles.title}>Buscar</Text>
+        </View>
+        <Text style={styles.subtitle}>Encuentra lo que buscar entre todos los eventos disponibles.</Text>
       </TouchableOpacity>
+      {/* Botón de Crear */}
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Añadir')}>
+      <View style={styles.content}>
+        <Ionicons name="add" size={25} color="black" style={styles.icon} />
+        <Text style={styles.title}>Añadir nuevo evento</Text>
+      </View>
+      <Text style={styles.subtitle}>Publica tu propio evento en Social Connect y compártelo.</Text>
+    </TouchableOpacity>
     </View>
   );
 }
@@ -51,34 +52,36 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   closeButton: {
-    color: '#000',  
-    fontSize: 30,  
-    marginTop: 80,
+    position: 'absolute',  
+    left: -35,
+    top: 15,
   },
-
-  // boton buscar
-  searchButton: {
+  button: {
     backgroundColor: '#D9D9D9',  
-    padding: 10,
-    borderRadius: 8,
+    padding: 15,
+    borderRadius: 20,
     marginTop: 20,
-    alignItems: 'center',  
-    justifyContent: 'center',
+    marginHorizontal: 15,
     flexDirection: 'column',  
   },
-  searchIcon: {
-    width: 20,  
-    height: 20,  
+  content: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginBottom: 5,
+
+  },
+  icon: {
+
     marginRight: 10,  
   },
-  searchButtonText: {
-    color: '#fff',  
+  title: {
+    color: '#000',  
     fontSize: 18,
     fontWeight: 'bold',
   },
-  eventsAvaible: {
+  subtitle: {
     color: '#000',  
-    fontSize: 12,
+    fontSize: 14,
     marginTop: 5,
   },
 });
