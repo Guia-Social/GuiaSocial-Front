@@ -1,0 +1,10 @@
+[
+    {
+        "rolId" : "1",
+        "rolName" : "Admin"
+    },
+    {
+        "rolId" : "2",
+        "rolName" : "Usuario"
+    }
+]
