@@ -1,0 +1,12 @@
+[
+    {
+        "categoriaId": "1",
+        "nombre": "Educativo",
+        "eventos": ["1"]
+    },
+    {
+        "categoriaId": "2",
+        "nombre": "Aprobador de cursos",
+        "eventos": ["2"]
+    }
+]

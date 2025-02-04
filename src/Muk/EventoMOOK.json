@@ -1,0 +1,26 @@
+[
+    {
+        "eventoId" : "1",
+        "nombre" : "Prueba en el ordenador de David",
+        "descripcion" : "Hacer un Mokito con json para que david compruebe las funcionalidades del frontend",
+        "fechaInicio" : "2025-02-04",
+        "fechaFin" : "2025-02-16",
+        "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
+        "categoria" : "1",
+        "ciudad" : "1",
+        "tipoEvento" : "2",
+        "idCreador" : "2"
+    },
+    {
+        "eventoId" : "2",
+        "nombre" : "Prueba en el ordenador de Santi",
+        "descripcion" : "Hacer un Mokito con json para que santi compruebe las funcionalidades del frontend",
+        "fechaInicio" : "2025-02-04",
+        "fechaFin" : "2025-02-16",
+        "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
+        "categoria" : "2",
+        "ciudad" : "2",
+        "tipoEvento" : "1",
+        "idCreador" : "1"
+    }
+]
