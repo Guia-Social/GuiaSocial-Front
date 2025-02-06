@@ -1,0 +1,12 @@
+[
+    {
+        "tipoId" : "1",
+        "nombre" : "Salamaleko",
+        "eventos" : ["1", "2"]
+    },
+    {
+        "tipoId" : "2",
+        "nombre" : "Salsa y picante",
+        "eventos" : []
+    }
+]

@@ -1,0 +1,12 @@
+[
+    {
+        "paisId" : "1",
+        "nombrePais" : "España",
+        "ciudades" : ["1", "2"]
+    },
+    {
+        "paisId": "2",
+        "nombrePais": "Portugal",
+        "ciudades":["3"]
+    }
+]
