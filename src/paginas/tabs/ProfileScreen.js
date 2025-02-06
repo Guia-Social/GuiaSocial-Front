@@ -40,7 +40,7 @@ export function ProfileScreen() {
         </TouchableOpacity>
 
         {/* Botón de Cerrar Sesión */}
-        <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
         </TouchableOpacity>
       </View>

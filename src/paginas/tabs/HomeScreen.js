@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
+
 // Importo el JSON
 import EventoMock from '../../mocks/EventoMock.json';
 
