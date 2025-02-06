@@ -7,7 +7,7 @@
         "fechaFin" : "2025-02-16",
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
         "categoria" : "1",
-        "ciudad" : "1",
+        "ciudad" : "1 - Sevilla",
         "tipoEvento" : "2",
         "idCreador" : "2"
     },
@@ -18,7 +18,7 @@
         "fechaInicio" : "2025-02-04",
         "fechaFin" : "2025-02-16",
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
-        "categoria" : "2",
+        "categoria" : "2", 
         "ciudad" : "2",
         "tipoEvento" : "1",
         "idCreador" : "1"

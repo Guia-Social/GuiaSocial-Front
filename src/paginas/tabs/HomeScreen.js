@@ -1,76 +1,53 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
+// Importo el JSON
+import EventoMock from '../../mocks/EventoMock.json';
+
 export function HomeScreen() {
   const navigation = useNavigation();
 
-  const eventos = [
-    {
-      id: 1,
-      nombre: 'Antique Theatro',
-      lugar: 'Discoteca',
-      ubicacion: 'Sevilla',
-      calle: 'C. Matemáticos Rey Pastor y Castro, s/n, 41092 Sevilla',
-    },
-    {
-      id: 2,
-      nombre: 'Festival de Música',
-      lugar: 'Parque Central',
-      ubicacion: 'Cádiz',
-      calle: 'Av. del Mar, s/n, 11011 Cádiz',
-    },
-    {
-      id: 3,
-      nombre: 'Concierto de Jazz',
-      lugar: 'Teatro Alameda',
-      ubicacion: 'Huelva',
-      calle: 'Calle Vázquez López, 12, 21001 Huelva',
-    },
-    {
-      id: 4,
-      nombre: 'Concierto de Jazz',
-      lugar: 'Teatro Alameda',
-      ubicacion: 'Huelva',
-      calle: 'Calle Vázquez López, 12, 21001 Huelva',
-    },
-  ];
+  const [eventos, setEventos] = useState([]);
+
+  useEffect(() => {
+    // Asignamos los datos del JSON a la constante eventos
+    setEventos(EventoMock);
+  }, []);
+
+  const openMap = (url) => {
+    // Usamos Linking para abrir el enlace en Google Maps
+    Linking.openURL(url).catch(err => console.error("No se pudo abrir la ubicación", err));
+  };
 
   return (
-    <>
     <View style={styles.container}>
       <View style={styles.header}>
-          <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Opciones')}>
-            <Ionicons name="menu" size={40} color="#fff"></Ionicons>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Opciones')}>
+          <Ionicons name="menu" size={40} color="#fff" />
+        </TouchableOpacity>
 
-          {/* Degradado aplicado al borde del calendario */}
-          <LinearGradient
-            colors={['#22c55e', '#9333ea']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.gradientBorder}
-          >
-            <TouchableOpacity style={styles.calendarButton} onPress={() => navigation.navigate('Calendario')}>
-              <Text style={styles.calendarTitle}>CALENDARIO</Text>
-              <Ionicons name="chevron-down" size={24} color="#fff"></Ionicons>
-            </TouchableOpacity>
-          </LinearGradient>
+        <LinearGradient
+          colors={['#22c55e', '#9333ea']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradientBorder}
+        >
+          <TouchableOpacity style={styles.calendarButton} onPress={() => navigation.navigate('Calendario')}>
+            <Text style={styles.calendarTitle}>CALENDARIO</Text>
+            <Ionicons name="chevron-down" size={24} color="#fff" />
+          </TouchableOpacity>
+        </LinearGradient>
 
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
-          <Ionicons name="person-circle" size={50} color="#fff"></Ionicons>
+          <Ionicons name="person-circle" size={50} color="#fff" />
         </TouchableOpacity>
       </View>
 
-      {/* Scroll horizontal de categorías de eventos */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.eventCategories}
-      >
-
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.eventCategories}>
+        {/* Agregar los botones de categorías de eventos */}
         <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Gastronomia')}>
           <Text style={styles.eventCategoryButtonText}>GASTRONOMÍA</Text>
         </TouchableOpacity>
@@ -95,48 +72,25 @@ export function HomeScreen() {
       <ScrollView>
         <View style={styles.eventList}>
           {eventos.map((evento) => (
-            <View key={evento.id} style={styles.eventCard}>
+            <View key={evento.eventoId} style={styles.eventCard}>
               <Image
                 source={require('../../../assets/imagen-evento.png')}
                 style={styles.eventImage}
               />
               <Text style={styles.eventTitle}>{evento.nombre}</Text>
-              <Text style={styles.eventLocation}>{evento.lugar}</Text>
-              <Text style={styles.eventCity}>{evento.ubicacion}</Text>
-              <Text style={styles.eventStreet}>{evento.calle}</Text>
+              <Text style={styles.eventDescription}>{evento.descripcion}</Text>
+              <Text style={styles.eventCity}>{evento.ciudad}</Text>
+              <Text style={styles.eventDate}>Del {evento.fechaInicio} Al {evento.fechaFin}</Text>
+
+              {/* Icono de mapa para abrir la ubicación en Google Maps */}
+              <TouchableOpacity onPress={() => openMap(evento.ubicacion)}>
+                <Ionicons name="map" size={24} color="#000" /><Text style={styles.eventLocation}>Ver en mapa</Text>
+              </TouchableOpacity>
             </View>
           ))}
         </View>
       </ScrollView>
-  </View>
-      {/* Boton localizaciones cercanas */}
-      <View style={styles.buttonLocation}>
-        {/* Degradado aplicado al borde del calendario */}
-        <LinearGradient
-          colors={['#22c55e', '#9333ea']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.gradientBorder}
-        >
-          <TouchableOpacity style={styles.backgroundContainer} onPress={() => navigation.navigate('SearchNearbyLocation')}>
-            <Image
-              source={require('../../../assets/direccion-vector.png')}
-              style={styles.iconLocationImage}
-            />
-            <View style={styles.containerTextButton} >
-              <Text style={styles.nearEvents}>Eventos cerca de</Text>
-              <Text style={styles.nearEventsLocation}>Sevilla - San Bernardo</Text>
-            </View>
-            <View style={styles.iconArrowUpImageContainer}>
-              <Image
-                source={require('../../../assets/flecha.png')}
-                style={styles.iconArrowUpImage}
-              />
-            </View>
-          </TouchableOpacity>
-        </LinearGradient>
-      </View>
-    </>
+    </View>
   );
 }
 
@@ -182,6 +136,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginRight: 8,
   },
+
+  /* Estilos de las cards de los eventos */
 
   eventCategories: {
     flexDirection: 'row',
@@ -229,27 +185,34 @@ const styles = StyleSheet.create({
   eventTitle: {
     padding: 10,
     color: '#000000',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
   },
 
   eventLocation: {
     paddingHorizontal: 10,
+    paddingTop: 10, 
     color: '#000000',
     fontSize: 14,
-    fontWeight: 'bold',
   },
 
   eventCity: {
     paddingHorizontal: 10,
+    paddingBottom: 15,
+    color: '#000000',
+    fontSize: 14,
+  },
+
+  eventDate: {
+    paddingHorizontal: 10,
     color: '#000000',
     fontSize: 14,
     fontWeight: 'bold',
   },
 
-  eventStreet: {
+  eventDescription: {
     paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingVertical: 7,
     color: '#000000',
     fontSize: 14,
     fontWeight: 'bold',
