@@ -39,7 +39,7 @@ export function GastronomiaScreen() {
           colors={['#22c55e', '#9333ea']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={styles.gradientBorder}
+          style={styles.gradientBorderHeader}
         >
           <TouchableOpacity style={styles.filterFoodButton}>
             <Text style={styles.filterFood}>GASTRONOMIA</Text>
@@ -69,7 +69,7 @@ export function GastronomiaScreen() {
           <Text style={styles.eventCategoryButtonText}>BUSCAR</Text>
         </TouchableOpacity>
       </ScrollView>
-     
+      
       <ScrollView>
         <View style={styles.eventList}>
           {eventos.map((evento) => (
@@ -93,6 +93,34 @@ export function GastronomiaScreen() {
           ))}
         </View>
       </ScrollView>
+
+      {/* Boton localizaciones cercanas */}
+      <View style={styles.buttonLocation}>
+        {/* Degradado aplicado al borde del calendario */}
+        <LinearGradient
+          colors={['#22c55e', '#9333ea']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradientBorder}
+        >
+          <TouchableOpacity style={styles.backgroundContainer} onPress={() => navigation.navigate('SearchNearbyLocation')}>
+            <Image
+              source={require('../../../assets/direccion-vector.png')}
+              style={styles.iconLocationImage}
+            />
+            <View style={styles.containerTextButton} >
+              <Text style={styles.nearEvents}>Eventos cerca de</Text>
+              <Text style={styles.nearEventsLocation}>Sevilla - San Bernardo</Text>
+            </View>
+            <View style={styles.iconArrowUpImageContainer}>
+              <Image
+                source={require('../../../assets/flecha.png')}
+                style={styles.iconArrowUpImage}
+              />
+            </View>
+          </TouchableOpacity>
+        </LinearGradient>
+      </View>
     </View>
   );
 }
@@ -119,7 +147,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 
-  gradientBorder: {
+  gradientBorderHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#1F1F1F',
@@ -160,20 +188,20 @@ const styles = StyleSheet.create({
   eventCategoryButton: {
     paddingHorizontal: 15,
     borderRadius: 10,
-    marginRight: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 50,
+    marginRight: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: 50, 
   },
 
   eventCategoryButtonText: {
-    color: '#000000',
+    color: '#000000', 
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',  
-    flex: 1,
+    flex: 1, 
   },
- 
+  
   // profileButton: {
   //   marginRight: 10,
   // },
@@ -242,5 +270,71 @@ const styles = StyleSheet.create({
   locationIconEventCity: {
     flexDirection: 'row',
     alignItems: 'center'
+  },
+
+  /* Estilo boton cercania */
+  gradientBorder: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#23272A',
+    borderWidth: 1,
+    borderRadius: 100,
+    paddingVertical: 2,
+    paddingHorizontal: 2,
+  },
+
+  buttonLocation: {
+    position: 'absolute',
+    bottom: 20, 
+    left: '5%',
+    width: '90%',
+    borderRadius: 100,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    zIndex: 1000, 
+  },
+  
+  backgroundContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#23272A',
+    borderRadius: 100,
+    paddingVertical: 10, 
+    paddingHorizontal: 16, 
+  },
+
+  nearEvents: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: 'normal',
+    marginBottom: 5,
+  },
+  
+  nearEventsLocation: {
+    fontSize: 18,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  
+  iconLocationImage: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
+    marginRight: 20, 
+  },
+
+  iconArrowUpImageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8, 
+  },
+
+  iconArrowUpImage: {
+    width: 24, 
+    height: 18,
+    resizeMode: 'contain', 
+    marginLeft: 12, 
   },
 });
