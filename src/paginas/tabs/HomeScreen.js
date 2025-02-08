@@ -91,9 +91,38 @@ export function HomeScreen() {
           ))}
         </View>
       </ScrollView>
-    </View>
+
+      {/* Boton localizaciones cercanas */}
+      <View style={styles.buttonLocation}>
+        {/* Degradado aplicado al borde del calendario */}
+        <LinearGradient
+          colors={['#22c55e', '#9333ea']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradientBorder}
+        >
+          <TouchableOpacity style={styles.backgroundContainer} onPress={() => navigation.navigate('SearchNearbyLocation')}>
+            <Image
+              source={require('../../../assets/direccion-vector.png')}
+              style={styles.iconLocationImage}
+            />
+            <View style={styles.containerTextButton} >
+              <Text style={styles.nearEvents}>Eventos cerca de</Text>
+              <Text style={styles.nearEventsLocation}>Sevilla - San Bernardo</Text>
+            </View>
+            <View style={styles.iconArrowUpImageContainer}>
+              <Image
+                source={require('../../../assets/flecha.png')}
+                style={styles.iconArrowUpImage}
+              />
+            </View>
+          </TouchableOpacity>
+        </LinearGradient>
+      </View>
+    </View> 
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
