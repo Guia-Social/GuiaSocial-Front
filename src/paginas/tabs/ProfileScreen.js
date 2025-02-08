@@ -54,21 +54,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 30,
   },
+  
   profileContainer: {
     alignItems: 'center',
     marginBottom: 30,
   },
+  
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
     marginBottom: 10,
   },
+  
   userName: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
+  
   sectionContainer: {
     width: '80%',
     backgroundColor: '#1e1e1e',
@@ -76,17 +80,20 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 10,
   },
+  
   sectionTitle: {
     color: '#70c100',
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  
   sectionItem: {
     color: '#fff',
     fontSize: 14,
     marginBottom: 5,
   },
+  
   homeButton: {
     backgroundColor: '#70C100',
     paddingVertical: 12,
@@ -95,6 +102,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 30,
   },
+  
   logoutButton: {
     backgroundColor: '#FF0000',
     paddingVertical: 12,
@@ -103,6 +111,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 30,
   },
+  
   logoutButtonText: {
     color: '#fff',
     fontWeight: 'bold',

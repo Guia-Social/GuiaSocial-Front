@@ -33,6 +33,7 @@
         "ciudad" : "Madrid",
         "nombre_categoria": "Restaurante",
         "tipo_de_evento": "Gastronomía",
+        "tipo_de_evento": "Gastronomia",
         "idCreador" : ""
     },
     {

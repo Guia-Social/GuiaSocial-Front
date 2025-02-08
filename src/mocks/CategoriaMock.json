@@ -1,12 +1,12 @@
 [
     {
-        "categoriaId": "1",
-        "nombre": "Educativo",
+        "categoriaId": 1,
+        "nombre": "Concierto",
         "eventos": ["1"]
     },
     {
-        "categoriaId": "2",
-        "nombre": "Aprobador de cursos",
+        "categoriaId": 2,
+        "nombre": "Discoteca",
         "eventos": ["2"]
     },
     {
@@ -18,5 +18,23 @@
         "categoriaId": "4",
         "nombre": "Vida nocturna",
         "eventos": ["2"]
+        "categoriaId": 3,
+        "nombre": "Restaurante",
+        "eventos": ["1"]
+    },
+    {
+        "categoriaId": 4,
+        "nombre": "Sala de baile",
+        "eventos": ["1"]
+    },
+    {
+        "categoriaId": 5,
+        "nombre": "Teatro",
+        "eventos": ["1"]
+    },
+    {
+        "categoriaId": 6,
+        "nombre": "Futbol",
+        "eventos": ["1"]
     }
 ]
