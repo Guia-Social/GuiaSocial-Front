@@ -1,12 +1,12 @@
 [
     {
         "tipoId" : "1",
-        "nombre" : "Salamaleko",
+        "nombre" : "Vip",
         "eventos" : ["1", "2"]
     },
     {
         "tipoId" : "2",
-        "nombre" : "Salsa y picante",
+        "nombre" : "Amigos",
         "eventos" : []
     }
 ]

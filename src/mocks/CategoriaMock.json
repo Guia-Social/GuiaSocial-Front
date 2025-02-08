@@ -8,5 +8,15 @@
         "categoriaId": "2",
         "nombre": "Aprobador de cursos",
         "eventos": ["2"]
+    },
+    {
+        "categoriaId": "3",
+        "nombre": "Gastronomía",
+        "eventos": ["2"]
+    },
+    {
+        "categoriaId": "4",
+        "nombre": "Vida nocturna",
+        "eventos": ["2"]
     }
 ]
