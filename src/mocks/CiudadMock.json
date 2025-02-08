@@ -1,8 +1,8 @@
 [
     {
-    "ciudadId": "1",
-    "nombreCiudad": "Sevilla",
-    "paisId": "1"
+        "ciudadId": "1",
+        "nombreCiudad": "Sevilla",
+        "paisId": "1"
     },
     {
         "ciudadId": "2",

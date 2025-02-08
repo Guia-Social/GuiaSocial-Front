@@ -1,12 +1,27 @@
 [
     {
-        "tipoId" : "1",
-        "nombre" : "Salamaleko",
+        "tipoId" : 1,
+        "nombre" : "Gastronomia",
         "eventos" : ["1", "2"]
     },
     {
-        "tipoId" : "2",
-        "nombre" : "Salsa y picante",
+        "tipoId" : 2,
+        "nombre" : "Vida nocturna",
+        "eventos" : []
+    },
+    {
+        "tipoId" : 3,
+        "nombre" : "Turismo",
+        "eventos" : []
+    },
+    {
+        "tipoId" : 4,
+        "nombre" : "Musica",
+        "eventos" : []
+    },
+    {
+        "tipoId" : 5,
+        "nombre" : "Teatro y espectaculos",
         "eventos" : []
     }
 ]

@@ -1,26 +1,74 @@
 [
     {
         "eventoId" : "1",
-        "nombre" : "Prueba en el ordenador de David",
-        "descripcion" : "Hacer un Mokito con json para que david compruebe las funcionalidades del frontend",
+        "nombre" : "Concierto en el ordenador de David",
+        "descripcion" : "Prueba para ver como funciona la app",
         "fechaInicio" : "2025-02-04",
         "fechaFin" : "2025-02-16",
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
-        "categoria" : "1",
-        "ciudad" : "1 - Sevilla",
-        "tipoEvento" : "2",
-        "idCreador" : "2"
+        "ciudad" : "Sevilla",
+        "nombre_categoria": "Concierto",
+        "tipo_de_evento": "Musica",
+        "idCreador" : "VIP"
     },
     {
         "eventoId" : "2",
-        "nombre" : "Prueba en el ordenador de Santi",
-        "descripcion" : "Hacer un Mokito con json para que santi compruebe las funcionalidades del frontend",
+        "nombre" : "Restaurante en el ordenador de Santi",
+        "descripcion" : "Prueba para ver como funciona en el ordenador de Santi",
         "fechaInicio" : "2025-02-04",
         "fechaFin" : "2025-02-16",
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
-        "categoria" : "2", 
-        "ciudad" : "2",
-        "tipoEvento" : "1",
-        "idCreador" : "1"
+        "ciudad" : "Huelva",
+        "nombre_categoria": "Restaurante",
+        "tipo_de_evento": "Gastronomia",
+        "idCreador" : ""
+    },
+    {
+        "eventoId" : "3",
+        "nombre" : "Restaurante Barato",
+        "descripcion" : "Este es el segundo restaurante de la aplicacion",
+        "fechaInicio" : "2025-02-04",
+        "fechaFin" : "2025-02-16",
+        "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
+        "ciudad" : "Madrid",
+        "nombre_categoria": "Restaurante",
+        "tipo_de_evento": "Gastronomia",
+        "idCreador" : ""
+    },
+    {
+        "eventoId" : "4",
+        "nombre" : "Concierto de rock",
+        "descripcion" : "Prueba para ver como funciona la app",
+        "fechaInicio" : "2025-02-04",
+        "fechaFin" : "2025-02-16",
+        "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
+        "ciudad" : "Madrid",
+        "nombre_categoria": "Concierto",
+        "tipo_de_evento": "Musica",
+        "idCreador" : "VIP"
+    },
+    {
+        "eventoId" : "5",
+        "nombre" : "Salsodromo",
+        "descripcion" : "Prueba para ver como funciona la app",
+        "fechaInicio" : "2025-02-04",
+        "fechaFin" : "2025-02-16",
+        "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
+        "ciudad" : "Madrid",
+        "nombre_categoria": "Discoteca",
+        "tipo_de_evento": "Vida Nocturna",
+        "idCreador" : "VIP"
+    },
+    {
+        "eventoId" : "6",
+        "nombre" : "La casa de Vaco",
+        "descripcion" : "Prueba para ver como funciona la app",
+        "fechaInicio" : "2025-02-04",
+        "fechaFin" : "2025-02-16",
+        "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
+        "ciudad" : "Madrid",
+        "nombre_categoria": "Discoteca",
+        "tipo_de_evento": "Vida Nocturna",
+        "idCreador" : "VIP"
     }
 ]

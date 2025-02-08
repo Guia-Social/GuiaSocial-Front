@@ -1,105 +1,100 @@
-import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
-import { Ionicons } from '@expo/vector-icons'
-import { LinearGradient } from 'expo-linear-gradient'
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
-// Lista de eventos nocturnos
-const eventosNocturnos = [
-    {
-      id: '1',
-      nombre: 'Fiesta en la Discoteca X',
-      descripcion: '¡Únete a la fiesta más épica de la ciudad con DJs en vivo!',
-      imagen: 'https://www.ejemplo.com/fiesta1.jpg'
-    },
-    {
-      id: '2',
-      nombre: 'Noches de Salsa',
-      descripcion: 'Baila salsa toda la noche en el club Y.',
-      imagen: 'https://www.ejemplo.com/fiesta2.jpg'
-    },
-    {
-      id: '3',
-      nombre: 'Concierto en Vivo',
-      descripcion: 'Disfruta de un concierto en vivo de tu banda favorita.',
-      imagen: 'https://www.ejemplo.com/fiesta3.jpg'
-    }
-]
+// Importo el mock para los eventos
+import EventoMock from '../../mocks/EventoMock.json';
 
 export function VidaNocturnaScreen() {
-
   const navigation = useNavigation();
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [eventos, setEventos] = useState([]);
 
-  // Clasificaciones de restaurantes
-  const categorias = [
-    'Discotecas',
-    'Conciertos',
-    'Pub',
-    'Bares de copas',
-    'Salsa'
-  ];
+  useEffect(() => {
+    // Filtramos los eventos que tienen tipo "MUSICA"
+    const eventosMusica = EventoMock.filter(evento => evento.tipo_de_evento === 'Vida Nocturna');
+    setEventos(eventosMusica);
+  }, []);
 
-  // Función para alternar la visibilidad del menú desplegable
-  const toggleDropdown = () => {
-    setIsDropdownVisible(!isDropdownVisible);
+  const openMap = (url) => {
+    // Usamos Linking para abrir el enlace en Google Maps
+    Linking.openURL(url).catch(err => console.error("No se pudo abrir la ubicación", err));
   };
 
-  // Renderiza la lista de eventos
-  const renderItem = ({ item }) => (
-    <View style={styles.eventoContainer}>
-      <Image source={{ uri: item.imagen }} style={styles.imagenEvento} />
-      <Text style={styles.nombreEvento}>{item.nombre}</Text>
-      <Text style={styles.descripcionEvento}>{item.descripcion}</Text>
-    </View>
-  )
+  // Función para navegar a la página de inicio
+  const goHome = () => {
+    navigation.navigate('Home');
+  };
 
   return (
     <View style={styles.container}>
       {/* Cabecera */}
       <View style={styles.header}>
-        {/* Botón de inicio */}
-        <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity style={styles.homeButton} onPress={goHome}>
           <Ionicons name="home" size={30} color="#fff" />
         </TouchableOpacity>
 
-        {/* Botón FILTRO (centrado) */}
         <LinearGradient
           colors={['#22c55e', '#9333ea']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.gradientBorder}
         >
-          <TouchableOpacity style={styles.eventNightFilter} onPress={toggleDropdown}>
-            <Text style={styles.eventNightFilterTitle}>EVENTOS NOCTURNOS</Text>
-            <Ionicons name={isDropdownVisible ? "chevron-up" : "chevron-down"} size={24} color="#fff" />
+          <TouchableOpacity style={styles.filterFoodButton}>
+            <Text style={styles.filterFood}>VIDA NOCTURNA</Text>
+            {/* <Ionicons name={isDropdownVisible ? "chevron-up" : "chevron-down"} size={24} color="#fff" /> */}
           </TouchableOpacity>
         </LinearGradient>
-
-        {/* Espaciado adicional para alinear el filtro en el centro */}
-        <View style={styles.placeholder}></View>
       </View>
 
-      {/* Desplegable con las categorías de restaurantes */}
-      {isDropdownVisible && (
-        <View style={styles.dropdownMenu}>
-          {categorias.map((categoria, index) => (
-            <TouchableOpacity key={index} style={styles.dropdownItem}>
-              <Text style={styles.dropdownItemText}>{categoria}</Text>
-            </TouchableOpacity>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.eventCategories}>
+        {/* Agregar los botones de categorías de eventos */}
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Gastronomia')}>
+          <Text style={styles.eventCategoryButtonText}>GASTRONOMÍA</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('vidaNocturna')}>
+          <Text style={styles.eventCategoryButtonText}>VIDA NOCTURNA</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('turismo')}>
+          <Text style={styles.eventCategoryButtonText}>TURISMO</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('musica')}>
+          <Text style={styles.eventCategoryButtonText}>MÚSICA</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('teatroYEspectaculo')}>
+          <Text style={styles.eventCategoryButtonText}>TEATRO Y ESPECTÁCULOS</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Buscar')}>
+          <Text style={styles.eventCategoryButtonText}>BUSCAR</Text>
+        </TouchableOpacity>
+      </ScrollView>
+      
+      <ScrollView>
+        <View style={styles.eventList}>
+          {eventos.map((evento) => (
+            <View key={evento.eventoId} style={styles.eventCard}>
+              <Image
+                source={require('../../../assets/imagen-evento.png')}
+                style={styles.eventImage}
+              />
+              <Text style={styles.eventTitle}>{evento.nombre}</Text>
+              <Text style={styles.eventDescription}>{evento.descripcion}</Text>
+              <Text style={styles.eventType}>{evento.tipo_de_evento}</Text>
+              <Text style={styles.categoryEventName}>{evento.nombre_categoria}</Text>
+              <Text style={styles.eventDate}>Del {evento.fechaInicio} Al {evento.fechaFin}</Text>
+
+              {/* Icono de mapa para abrir la ubicación en Google Maps */}
+              <TouchableOpacity style={styles.locationIconEventCity} onPress={() => openMap(evento.ubicacion)}>
+                <Image source={require('../../../assets/localizacion.png')} style={styles.locationIconEvent} />
+                <Text>{evento.ciudad}</Text>
+              </TouchableOpacity>
+            </View>
           ))}
         </View>
-      )}
-
-      {/* Lista de eventos */}
-      <FlatList
-        data={eventosNocturnos}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.contentContainer}
-      />
+      </ScrollView>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -108,9 +103,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#23272A',
   },
 
+  /* Cabecera */
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between', // Esto asegura que los elementos estén distribuidos de manera equitativa
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 60,
     paddingHorizontal: 20,
@@ -119,6 +115,7 @@ const styles = StyleSheet.create({
   },
 
   homeButton: {
+    marginRight: 20,
     padding: 10,
   },
 
@@ -130,13 +127,9 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingVertical: 2,
     paddingHorizontal: 2,
-    flexGrow: 1, // Esto hace que el filtro se estire en el espacio disponible
-    justifyContent: 'center',
-    marginLeft: 30, // Añadir un poco de espacio a la izquierda
-    marginRight: 30, // Añadir un poco de espacio a la derecha
   },
 
-  eventNightFilter: {
+  filterFoodButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -146,69 +139,108 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
 
-  eventNightFilterTitle: {
+  filterFood: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
     marginRight: 8,
   },
 
-  dropdownMenu: {
-    backgroundColor: '#333',
-    width: 150, // Ancho más estrecho
-    borderRadius: 10,
-    marginTop: 5,
-    position: 'absolute',
-    top: 100, // Asegura que se abra justo debajo del botón
-    left: '50%',
-    transform: [{ translateX: -75 }], // Centra el desplegable
-    paddingVertical: 5,
-    zIndex: 1,
+  /* Navegacion horizontal */
+
+  eventCategories: {
+    flexDirection: 'row',
+    backgroundColor: '#D9D9D9',
+    paddingVertical: 20,
+    paddingHorizontal: 5,
+    maxHeight: 60,  // Limita la altura del contenedor
+    overflow: 'hidden',  // Recorta el contenido que sobresale
   },
 
-  dropdownItem: {
-    paddingVertical: 10,
+  eventCategoryButton: {
     paddingHorizontal: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#444',
+    borderRadius: 10,
+    marginRight: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: 50, 
   },
 
-  dropdownItemText: {
-    color: '#fff',
+  eventCategoryButtonText: {
+    color: '#000000', 
     fontSize: 16,
-  },
-
-  contentContainer: {
-    paddingHorizontal: 20,
-  },
-
-  eventoContainer: {
-    marginBottom: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 15,
-    elevation: 5
-  },
-
-  imagenEvento: {
-    width: '100%',
-    height: 200,
-    borderRadius: 10,
-    marginBottom: 10
-  },
-
-  nombreEvento: {
-    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5
+    textAlign: 'center',  
+    flex: 1, 
+  },
+  
+  // profileButton: {
+  //   marginRight: 10,
+  // },
+
+  eventList: {
+    paddingHorizontal: 20,
+    marginTop: 30,
   },
 
-  descripcionEvento: {
+  eventCard: {
+    marginBottom: 20,
+    backgroundColor: '#D9D9D9',
+    borderRadius: 15,
+    padding: 0,
+  },
+
+  eventImage: {
+    width: '100%',
+    borderRadius: 15,
+    marginBottom: 10,
+  },
+
+  eventTitle: {
+    padding: 10,
+    color: '#000000',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+
+  eventDescription: {
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    color: '#000000',
     fontSize: 14,
-    color: '#777'
+    fontWeight: 'bold',
   },
 
-  placeholder: {
-    flexGrow: 1,
+  eventType: {
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  categoryEventName: {
+    paddingHorizontal: 10,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'normal',
+  },
+
+  eventDate: {
+    paddingHorizontal: 10,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  locationIconEvent: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain'
+  },
+
+  locationIconEventCity: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
 });
