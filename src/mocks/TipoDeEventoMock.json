@@ -2,7 +2,7 @@
     {
         "tipoId" : "1",
         "nombre" : "Vip",
-        "eventos" : ["1", "2"]
+        "eventos" : [1, 2]
     },
     {
         "tipoId" : "2",
@@ -29,6 +29,11 @@
     {
         "tipoId" : 5,
         "nombre" : "Teatro y espectaculos",
+        "eventos" : []
+    },
+    {
+        "tipoId" : "3",
+        "nombre" : "Ayuntamiento",
         "eventos" : []
     }
 ]
