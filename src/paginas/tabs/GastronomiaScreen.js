@@ -13,7 +13,7 @@ export function GastronomiaScreen() {
 
   useEffect(() => {
     // Filtramos los eventos que tienen tipo "GASTRONOMIA"
-    const eventosGastronomia = EventoMock.filter(evento => evento.tipo_de_evento === 'Gastronomia');
+    const eventosGastronomia = EventoMock.filter(evento => evento.tipo_de_evento === 'Gastronomía');
     setEventos(eventosGastronomia);
   }, []);
 
