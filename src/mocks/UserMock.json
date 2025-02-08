@@ -2,7 +2,7 @@
     {
         "userId": 1,
         "username": "David Cuevinas",
-        "email": "david.cuevinas@vedrunasevillasj.es",
+        "email": "david.cuevinas@gmail.com",
         "password": "password123",
         "rolName": "Cuevinas",
         "fechaRegistro": "2003-02-03",
@@ -18,15 +18,15 @@
         "password": "hola123",
         "rolName": "Hola",
         "fechaRegistro": "2003-02-03",
-        "fotoDePerfil": "https://cdn-icons-png.flaticon.com/512/1198/1198293.png",
+        "fotoDePerfil": "https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png",
         "amigos": [1, 4]
     
     
     },
     {
-        "userId": 4,
+        "userId": 3,
         "username": "Real King of Ohio",
-        "email": "don.pollo@vedrunasevillasj.es",
+        "email": "don.pollo@gmail.com",
         "password": "password123",
         "rolName": "King",
         "fechaRegistro": "2022-12-03",
