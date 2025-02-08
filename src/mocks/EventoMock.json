@@ -32,6 +32,7 @@
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
         "ciudad" : "Madrid",
         "nombre_categoria": "Restaurante",
+        "tipo_de_evento": "Gastronomía",
         "tipo_de_evento": "Gastronomia",
         "idCreador" : ""
     },
