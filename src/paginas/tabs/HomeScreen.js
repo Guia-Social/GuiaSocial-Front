@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
-// Importo el mock para los eventos
 import EventoMock from '../../mocks/EventoMock.json';
 
 export function HomeScreen() {
@@ -252,7 +251,6 @@ const styles = StyleSheet.create({
     zIndex: 1000, 
   },
   
-
   backgroundContainer: {
     flexDirection: 'row',
     alignItems: 'center',

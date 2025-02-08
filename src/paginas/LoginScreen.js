@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import usersData from '../mocks/UserMock.json'; // Asegúrate de tener la ruta correcta al archivo
 
 export function LoginScreen() {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // Para mostrar errores si las credenciales son incorrectas
 
   const handleLogin = () => {
-    if (email && password) {
+    // Buscar al usuario que coincida con el correo y la contraseña
+    const user = usersData.find(
+      (user) => user.email === email && user.password === password
+    );
+
+    if (user) {
+      // Si el usuario existe y las credenciales son correctas, navega a Home
       navigation.navigate('Home');
+    } else {
+      // Si las credenciales son incorrectas, muestra un error
+      setError('Correo o contraseña incorrectos');
     }
   };
 
@@ -44,6 +55,9 @@ export function LoginScreen() {
         value={password}
         onChangeText={setPassword}
       />
+
+      {/* Mostrar el error si las credenciales son incorrectas */}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <TouchableOpacity style={styles.forgotPasswordButton} onPress={() => navigation.navigate('ForgotPassword')}>
         <Text style={styles.forgotPasswordText}>¿Olvidaste la contraseña?</Text>
@@ -123,5 +137,11 @@ const styles = StyleSheet.create({
   registerLink: {
     color: '#70c100',
     fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 10,
   },
 });
