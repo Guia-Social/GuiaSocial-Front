@@ -69,7 +69,11 @@ export function TeatroYEspectaculoScreen() {
           <Text style={styles.eventCategoryButtonText}>BUSCAR</Text>
         </TouchableOpacity>
       </ScrollView>
+<<<<<<< HEAD
       
+=======
+     
+>>>>>>> e3afab375f44e4f0af3e8cc0c4ccb6452e653cde
       <ScrollView>
         <View style={styles.eventList}>
           {eventos.map((evento) => (
@@ -160,6 +164,7 @@ const styles = StyleSheet.create({
   eventCategoryButton: {
     paddingHorizontal: 15,
     borderRadius: 10,
+<<<<<<< HEAD
     marginRight: 0, 
     justifyContent: 'center', 
     alignItems: 'center', 
@@ -174,6 +179,22 @@ const styles = StyleSheet.create({
     flex: 1, 
   },
   
+=======
+    marginRight: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+  },
+
+  eventCategoryButtonText: {
+    color: '#000000',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',  
+    flex: 1,
+  },
+ 
+>>>>>>> e3afab375f44e4f0af3e8cc0c4ccb6452e653cde
   // profileButton: {
   //   marginRight: 10,
   // },
@@ -209,6 +230,42 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 14,
     fontWeight: 'bold',
+<<<<<<< HEAD
+  },
+
+  eventType: {
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  categoryEventName: {
+    paddingHorizontal: 10,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'normal',
+  },
+
+  eventDate: {
+    paddingHorizontal: 10,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  locationIconEvent: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain'
+  },
+
+  locationIconEventCity: {
+    flexDirection: 'row',
+    alignItems: 'center'
+=======
+>>>>>>> e3afab375f44e4f0af3e8cc0c4ccb6452e653cde
   },
 
   eventType: {
