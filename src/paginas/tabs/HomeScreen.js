@@ -4,8 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
-
-// Importo el JSON
 import EventoMock from '../../mocks/EventoMock.json';
 
 export function HomeScreen() {
@@ -80,13 +78,16 @@ export function HomeScreen() {
               /> 
               <Text style={styles.eventTitle}>{evento.nombre}</Text>
               <Text style={styles.eventDescription}>{evento.descripcion}</Text>
-              <Text style={styles.eventCity}>{evento.ciudad}</Text>
+              <Text style={styles.eventType}>{evento.tipo_de_evento}</Text>
+              <Text style={styles.categoryEventName}>{evento.nombre_categoria}</Text>
               <Text style={styles.eventDate}>Del {evento.fechaInicio} Al {evento.fechaFin}</Text>
 
               {/* Icono de mapa para abrir la ubicación en Google Maps */}
-              <TouchableOpacity onPress={() => openMap(evento.ubicacion)}>
-                <Ionicons name="map" size={24} color="#000" /><Text style={styles.eventLocation}>Ver en mapa</Text>
+              <TouchableOpacity style={styles.locationIconEventCity} onPress={() => openMap(evento.ubicacion)}>
+                <Image source={require('../../../assets/localizacion.png')} style={styles.locationIconEvent} />
+                <Text>{evento.ciudad}</Text>
               </TouchableOpacity>
+              
             </View>
           ))}
         </View>
@@ -130,6 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#23272A',
   },
 
+  /* Cabecera */
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -167,7 +169,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
 
-  /* Estilos de las cards de los eventos */
+  /* Navegacion horizontal */
 
   eventCategories: {
     flexDirection: 'row',
@@ -250,6 +252,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+  eventType: {
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  categoryEventName: {
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'normal',
+  },
+
   /* Estilos boton localizacion cercana */
   buttonLocation: {
     position: 'absolute',
@@ -264,7 +282,6 @@ const styles = StyleSheet.create({
     zIndex: 1000, 
   },
   
-
   backgroundContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -274,7 +291,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, 
   },
 
-  
   nearEvents: {
     fontSize: 14,
     color: '#fff',
@@ -288,25 +304,34 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   
-  
-iconLocationImage: {
-  width: 24,
-  height: 24,
-  resizeMode: 'contain',
-  marginRight: 20, 
-},
+  iconLocationImage: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
+    marginRight: 20, 
+  },
 
+  iconArrowUpImageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8, 
+  },
 
-iconArrowUpImageContainer: {
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: 8, 
-},
+  iconArrowUpImage: {
+    width: 24, 
+    height: 18,
+    resizeMode: 'contain', 
+    marginLeft: 12, 
+  },
 
-iconArrowUpImage: {
-  width: 24, 
-  height: 18,
-  resizeMode: 'contain', 
-  marginLeft: 12, 
-},
+  locationIconEvent: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain'
+  },
+
+  locationIconEventCity: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
 });

@@ -41,6 +41,7 @@ export function LoginScreen() {
         style={styles.input}
         placeholder="Introduzca su correo"
         placeholderTextColor="#ccc"
+        keyboardType='email-address'
         value={email}
         onChangeText={setEmail}
       />
