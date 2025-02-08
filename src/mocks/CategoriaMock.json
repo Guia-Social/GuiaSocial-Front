@@ -1,22 +1,27 @@
 [
     {
-        "categoriaId": "1",
-        "nombre": "Educativo",
-        "eventos": ["1"]
+        "categoriaId": 1,
+        "nombre": "Gastronomia",
+        "eventos": [1]
     },
     {
-        "categoriaId": "2",
-        "nombre": "Aprobador de cursos",
-        "eventos": ["2"]
-    },
-    {
-        "categoriaId": "3",
-        "nombre": "Gastronomía",
-        "eventos": ["2"]
-    },
-    {
-        "categoriaId": "4",
+        "categoriaId": 2,
         "nombre": "Vida nocturna",
-        "eventos": ["2"]
+        "eventos": [2]
+    },
+    {
+        "categoriaId": 3,
+        "nombre": "Turismo",
+        "eventos": [2]
+    },
+    {
+        "categoriaId": 4,
+        "nombre": "Musica",
+        "eventos": [2]
+    },
+    {
+        "categoriaId": 5,
+        "nombre": "Teatro y espectaculos",
+        "eventos": [1]
     }
 ]

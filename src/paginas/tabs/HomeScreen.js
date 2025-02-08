@@ -74,10 +74,10 @@ export function HomeScreen() {
         <View style={styles.eventList}>
           {eventos.map((evento) => (
             <View key={evento.eventoId} style={styles.eventCard}>
-              <Image
-                source={require('../../../assets/imagen-evento.png')}
-                style={styles.eventImage}
-              />
+              <Image 
+              source={{ uri: evento.imagen }} 
+              style={styles.eventImage} 
+              /> 
               <Text style={styles.eventTitle}>{evento.nombre}</Text>
               <Text style={styles.eventDescription}>{evento.descripcion}</Text>
               <Text style={styles.eventCity}>{evento.ciudad}</Text>
@@ -208,8 +208,10 @@ const styles = StyleSheet.create({
 
   eventImage: {
     width: '100%',
-    borderRadius: 15,
-    marginBottom: 10,
+    height: 200,
+    borderRadius: 10,
+    resizeMode: 'cover', 
+
   },
 
   eventTitle: {

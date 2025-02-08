@@ -3,72 +3,78 @@
         "eventoId" : "1",
         "nombre" : "Concierto en el ordenador de David",
         "descripcion" : "Prueba para ver como funciona la app",
+        "imagen" : "https://www.juntadeandalucia.es/cultura/agendaculturaldeandalucia/sites/default/files/2024-11/conciertos_en_sevilla.jpg",
         "fechaInicio" : "2025-02-04",
         "fechaFin" : "2025-02-16",
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
         "ciudad" : "Sevilla",
         "nombre_categoria": "Concierto",
         "tipo_de_evento": "Musica",
-        "idCreador" : "VIP"
+        "nombreCreador" : "David Cuevinas"
     },
     {
         "eventoId" : "2",
         "nombre" : "Restaurante en el ordenador de Santi",
         "descripcion" : "Prueba para ver como funciona en el ordenador de Santi",
+        "imagen" : "https://images.ecestaticos.com/_3kfhO4ya9xgbTfzjEW1xVoX0wk=/0x0:1916x1080/1338x752/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F65d%2F30b%2F3fd%2F65d30b3fd525fd8d0f8a4788925a667c.jpg",
         "fechaInicio" : "2025-02-04",
         "fechaFin" : "2025-02-16",
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
         "ciudad" : "Huelva",
         "nombre_categoria": "Restaurante",
         "tipo_de_evento": "Gastronomia",
-        "idCreador" : ""
+        "nombreCreador" : ""
     },
     {
         "eventoId" : "3",
         "nombre" : "Restaurante Barato",
         "descripcion" : "Este es el segundo restaurante de la aplicacion",
+        "imagen" : "https://www.hostelworld.com/blog/wp-content/uploads/2016/02/1Las-columnas.jpg",
         "fechaInicio" : "2025-02-04",
         "fechaFin" : "2025-02-16",
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
         "ciudad" : "Madrid",
         "nombre_categoria": "Restaurante",
-        "tipo_de_evento": "Gastronomía",
-        "idCreador" : ""
+        "tipo_de_evento": "Gastronomia",
+        "nombreCreador" : ""
     },
     {
         "eventoId" : "4",
         "nombre" : "Concierto de rock",
         "descripcion" : "Prueba para ver como funciona la app",
+        "imagen" : "https://www.d2fy.es/cdn/shop/articles/los-conciertos-de-rock-en-espana-que-no-te-puedes-perder-este-2023-848950.jpg?v=1705416219",
         "fechaInicio" : "2025-02-04",
         "fechaFin" : "2025-02-16",
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
         "ciudad" : "Madrid",
         "nombre_categoria": "Concierto",
         "tipo_de_evento": "Musica",
-        "idCreador" : "VIP"
+        "nombreCreador" : "VIP"
     },
     {
         "eventoId" : "5",
         "nombre" : "Salsodromo",
         "descripcion" : "Prueba para ver como funciona la app",
+        "imagen" : "https://cdn.premiumguest.com/flyers/w_whatsapp-image-2025-01-21-at-16.26.23-1.jpeg",
         "fechaInicio" : "2025-02-04",
         "fechaFin" : "2025-02-16",
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
         "ciudad" : "Madrid",
         "nombre_categoria": "Discoteca",
         "tipo_de_evento": "Vida Nocturna",
-        "idCreador" : "VIP"
+        "nombreCreador" : "VIP"
     },
     {
         "eventoId" : "6",
         "nombre" : "La casa de Vaco",
         "descripcion" : "Prueba para ver como funciona la app",
+        "imagen" : "https://www.ordagomadrid.es/images/Ordago-acogedor.jpg",
         "fechaInicio" : "2025-02-04",
         "fechaFin" : "2025-02-16",
         "ubicacion" : "https://maps.app.goo.gl/wTVzYD7LGEtNb9Ad8",
         "ciudad" : "Madrid",
         "nombre_categoria": "Discoteca",
         "tipo_de_evento": "Vida Nocturna",
-        "idCreador" : "VIP"
+        "nombreCreador" : "VIP"
     }
 ]
