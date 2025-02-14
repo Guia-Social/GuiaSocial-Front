@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,18 +26,20 @@ export function CalendarScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Cabecera */}
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>Calendario</Text>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Ionicons name="close" size={50} color="black" style={styles.closeButton} />
+          <Ionicons name="close" size={50} color="black" style={styles.closeButton} />
         </TouchableOpacity>
       </View>
 
-      {/* Lista de fechas con scroll */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {dates.map((date, index) => (
-          <TouchableOpacity key={index} style={styles.dateButton}>
+          <TouchableOpacity 
+            key={index} 
+            style={styles.dateButton}
+            onPress={() => navigation.navigate('EventosDelDia', { date })} // Pasamos la fecha seleccionada
+          >
             <Text style={styles.dateText}>{date}</Text>
           </TouchableOpacity>
         ))}
@@ -52,38 +54,37 @@ const styles = StyleSheet.create({
     backgroundColor: '#2F2F2F',
   },
   headerContainer: {
-    flexDirection: 'row',  
-    justifyContent: 'space-between',  
-    alignItems: 'center',  
-    backgroundColor: '#D9D9D9',  
-    paddingHorizontal: 20,  
-    paddingVertical: 20,  
-    height: 150, 
-  
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#D9D9D9',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    height: 150,
   },
   headerTitle: {
-    color: '#000',  
-    fontSize: 24,  
-    fontWeight: 'bold',  
+    color: '#000',
+    fontSize: 24,
+    fontWeight: 'bold',
     marginTop: 80,
   },
   closeButton: {
-    position: 'absolute',  
+    position: 'absolute',
     left: -35,
-    top: 15,  
+    top: 15,
   },
   scrollContainer: {
     paddingVertical: 10,
   },
   dateButton: {
-    backgroundColor: '#D9D9D9',  
+    backgroundColor: '#D9D9D9',
     padding: 8,
     borderRadius: 12,
     marginVertical: 10,
     marginHorizontal: 15,
   },
   dateText: {
-    color: '#000',  
+    color: '#000',
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
