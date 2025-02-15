@@ -1,28 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';  // Importación de Ionicons
 
 // Importo el mock para los eventos
 import EventoMock from '../../mocks/EventoMock.json';
 
-export function GastronomiaScreen() {
+export function EventosDelDiaScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { date } = route.params;  // Obtenemos la fecha pasada como parámetro
   const [eventos, setEventos] = useState([]);
 
   useEffect(() => {
-    // Filtramos los eventos que tienen tipo "GASTRONOMIA"
-    const eventosGastronomia = EventoMock.filter(evento => evento.tipo_de_evento === 'Gastronomia');
-    setEventos(eventosGastronomia);
-  }, []);
+    // Convertimos la fecha seleccionada a un objeto Date
+    const selectedDate = new Date(date);
+
+    // Filtramos los eventos que incluyen la fecha seleccionada en su intervalo de fechas
+    const eventosDelDia = EventoMock.filter(evento => {
+      const fechaInicio = new Date(evento.fechaInicio);
+      const fechaFin = new Date(evento.fechaFin);
+      
+      // Comprobamos si la fecha seleccionada está dentro del intervalo
+      return selectedDate >= fechaInicio && selectedDate <= fechaFin;
+    });
+
+    setEventos(eventosDelDia);
+  }, [date]);
 
   const openMap = (url) => {
     // Usamos Linking para abrir el enlace en Google Maps
     Linking.openURL(url).catch(err => console.error("No se pudo abrir la ubicación", err));
   };
 
-  // Función para navegar a la página de inicio
   const goHome = () => {
     navigation.navigate('Home');
   };
@@ -32,7 +43,7 @@ export function GastronomiaScreen() {
       {/* Cabecera */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.homeButton} onPress={goHome}>
-          <Ionicons name="home" size={30} color="#fff" />
+          <Ionicons name="home" size={30} color="#fff" /> {/* Icono de Ionicons */}
         </TouchableOpacity>
 
         <LinearGradient
@@ -42,61 +53,45 @@ export function GastronomiaScreen() {
           style={styles.gradientBorderHeader}
         >
           <TouchableOpacity style={styles.filterFoodButton}>
-            <Text style={styles.filterFood}>GASTRONOMIA</Text>
-            {/* <Ionicons name={isDropdownVisible ? "chevron-up" : "chevron-down"} size={24} color="#fff" /> */}
+            <Text style={styles.filterFood}>Eventos del día: {date}</Text>
           </TouchableOpacity>
         </LinearGradient>
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.eventCategories}>
-        {/* Agregar los botones de categorías de eventos */}
-        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Gastronomia')}>
-          <Text style={styles.eventCategoryButtonText}>GASTRONOMÍA</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('vidaNocturna')}>
-          <Text style={styles.eventCategoryButtonText}>VIDA NOCTURNA</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('turismo')}>
-          <Text style={styles.eventCategoryButtonText}>TURISMO</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('musica')}>
-          <Text style={styles.eventCategoryButtonText}>MÚSICA</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('teatroYEspectaculo')}>
-          <Text style={styles.eventCategoryButtonText}>TEATRO Y ESPECTÁCULOS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Buscar')}>
-          <Text style={styles.eventCategoryButtonText}>BUSCAR</Text>
-        </TouchableOpacity>
+        {/* Agregar botones de categorías si lo deseas */}
       </ScrollView>
-      
+
       <ScrollView>
         <View style={styles.eventList}>
-          {eventos.map((evento) => (
-            <View key={evento.eventoId} style={styles.eventCard}>
-              <Image
-                source={require('../../../assets/imagen-evento.png')}
-                style={styles.eventImage}
-              />
-              <Text style={styles.eventTitle}>{evento.nombre}</Text>
-              <Text style={styles.eventDescription}>{evento.descripcion}</Text>
-              <Text style={styles.eventType}>{evento.tipo_de_evento}</Text>
-              <Text style={styles.categoryEventName}>{evento.nombre_categoria}</Text>
-              <Text style={styles.eventDate}>Del {evento.fechaInicio} Al {evento.fechaFin}</Text>
+          {eventos.length > 0 ? (
+            eventos.map((evento) => (
+              <View key={evento.eventoId} style={styles.eventCard}>
+                <Image
+                  source={{ uri: evento.imagen }} // Asegúrate de tener la imagen correcta
+                  style={styles.eventImage}
+                />
+                <Text style={styles.eventTitle}>{evento.nombre}</Text>
+                <Text style={styles.eventDescription}>{evento.descripcion}</Text>
+                <Text style={styles.eventType}>{evento.tipo_de_evento}</Text>
+                <Text style={styles.categoryEventName}>{evento.nombre_categoria}</Text>
+                <Text style={styles.eventDate}>Del {evento.fechaInicio} Al {evento.fechaFin}</Text>
 
-              {/* Icono de mapa para abrir la ubicación en Google Maps */}
-              <TouchableOpacity style={styles.locationIconEventCity} onPress={() => openMap(evento.ubicacion)}>
-                <Image source={require('../../../assets/localizacion.png')} style={styles.locationIconEvent} />
-                <Text>{evento.ciudad}</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+                {/* Icono de mapa para abrir la ubicación en Google Maps */}
+                <TouchableOpacity style={styles.locationIconEventCity} onPress={() => openMap(evento.ubicacion)}>
+                  <Image source={require('../../../assets/localizacion.png')} style={styles.locationIconEvent} />
+                  <Text>{evento.ciudad}</Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          ) : (
+            <Text style={styles.noEventsText}>No hay eventos para este día</Text>
+          )}
         </View>
       </ScrollView>
 
-      {/* Boton localizaciones cercanas */}
+      {/* Botón localizaciones cercanas */}
       <View style={styles.buttonLocation}>
-        {/* Degradado aplicado al borde del calendario */}
         <LinearGradient
           colors={['#22c55e', '#9333ea']}
           start={{ x: 0, y: 0 }}
@@ -108,7 +103,7 @@ export function GastronomiaScreen() {
               source={require('../../../assets/direccion-vector.png')}
               style={styles.iconLocationImage}
             />
-            <View style={styles.containerTextButton} >
+            <View style={styles.containerTextButton}>
               <Text style={styles.nearEvents}>Eventos cerca de</Text>
               <Text style={styles.nearEventsLocation}>Sevilla - San Bernardo</Text>
             </View>
@@ -174,15 +169,13 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
 
-  /* Navegacion horizontal */
-
   eventCategories: {
     flexDirection: 'row',
     backgroundColor: '#D9D9D9',
     paddingVertical: 20,
     paddingHorizontal: 5,
-    maxHeight: 60,  // Limita la altura del contenedor
-    overflow: 'hidden',  // Recorta el contenido que sobresale
+    maxHeight: 60,
+    overflow: 'hidden',
   },
 
   eventCategoryButton: {
@@ -201,10 +194,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',  
     flex: 1, 
   },
-  
-  // profileButton: {
-  //   marginRight: 10,
-  // },
 
   eventList: {
     paddingHorizontal: 20,
@@ -272,7 +261,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
-  /* Estilo boton cercania */
   gradientBorder: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -295,7 +283,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     zIndex: 1000, 
   },
-  
+
   backgroundContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -311,13 +299,13 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     marginBottom: 5,
   },
-  
+
   nearEventsLocation: {
     fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
   },
-  
+
   iconLocationImage: {
     width: 24,
     height: 24,
@@ -336,5 +324,12 @@ const styles = StyleSheet.create({
     height: 18,
     resizeMode: 'contain', 
     marginLeft: 12, 
+  },
+
+  noEventsText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 20,
   },
 });

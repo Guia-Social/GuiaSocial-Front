@@ -10,6 +10,7 @@ import { MusicaScreen } from './src/paginas/tabs/MusicaScreen';
 import { TeatroYEspectaculoScreen } from './src/paginas/tabs/TeatroYEspectaculoScreen';
 import { LoginScreen } from './src/paginas/LoginScreen';
 import { RegisterScreen } from './src/paginas/RegisterScreen';
+import { EventosDelDiaScreen } from './src/paginas/tabs/EventosDelDiaScreen';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +49,7 @@ export default function App() {
         <Stack.Screen name="turismo" component={TurismoScreen} />
         <Stack.Screen name="musica" component={MusicaScreen} />
         <Stack.Screen name="teatroYEspectaculo" component={TeatroYEspectaculoScreen} />
+        <Stack.Screen name="EventosDelDia" component={EventosDelDiaScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

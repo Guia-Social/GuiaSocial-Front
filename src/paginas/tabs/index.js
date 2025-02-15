@@ -10,3 +10,4 @@ export { VidaNocturnaScreen } from './VidaNocturnaScreen';
 export { TurismoScreen } from './TurismoScreen';
 export { MusicaScreen } from './MusicaScreen';
 export { TeatroYEspectaculoScreen } from './TeatroYEspectaculoScreen';
+export { EventosDelDiaScreen } from './EventosDelDiaScreen';
