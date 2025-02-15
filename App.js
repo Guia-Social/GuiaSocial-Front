@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { CalendarScreen, GastronomiaScreen, HomeScreen, OpcionesScreen, ProfileScreen, SearchNearbyLocation, BuscarScreen, 
+import { CalendarScreen, GastronomiaScreen, HomeScreen, OpcionesScreen, ProfileScreen, SearchNearbyLocationScreen, BuscarScreen, 
   AñadirScreen, VidaNocturnaScreen } from './src/paginas/tabs/';
 import { TurismoScreen } from './src/paginas/tabs/TurismoScreen';
 import { MusicaScreen } from './src/paginas/tabs/MusicaScreen';
@@ -41,7 +41,7 @@ export default function App() {
         <Stack.Screen name="Perfil" component={ProfileScreen} />
         <Stack.Screen name="Opciones" component={OpcionesScreen} />
         <Stack.Screen name="Calendario" component={CalendarScreen} />
-        <Stack.Screen name="SearchNearbyLocation" component={SearchNearbyLocation} />
+        <Stack.Screen name="SearchNearbyLocation" component={SearchNearbyLocationScreen} />
         <Stack.Screen name="Buscar" component={BuscarScreen} />
         <Stack.Screen name="Añadir" component={AñadirScreen} />
         <Stack.Screen name ="Gastronomia" component={GastronomiaScreen} />
