@@ -2,7 +2,7 @@ export { CalendarScreen } from "./CalendarScreen";
 export { HomeScreen } from "./HomeScreen";
 export { OpcionesScreen } from "./OpcionesScreen";
 export { ProfileScreen } from './ProfileScreen';
-export { SearchNearbyLocation } from './SearchNearbyLocation';
+export { SearchNearbyLocationScreen } from './SearchNearbyLocationScreen';
 export { BuscarScreen } from './BuscarScreen';
 export { GastronomiaScreen } from './GastronomiaScreen';
 export { AñadirScreen } from './AñadirScreen';
