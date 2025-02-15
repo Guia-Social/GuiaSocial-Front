@@ -24,18 +24,22 @@ export function OpcionesScreen() {
         <Text style={styles.subtitle}>Encuentra lo que buscar entre todos los eventos disponibles.</Text>
       </TouchableOpacity>
       {/* Botón de Crear */}
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Añadir')}>
-      <View style={styles.content}>
-        <Ionicons name="add" size={25} color="black" style={styles.icon} />
-        <Text style={styles.title}>Añadir nuevo evento</Text>
-      </View>
-      <Text style={styles.subtitle}>Publica tu propio evento en Social Connect y compártelo.</Text>
-    </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Anadir')}>
+        <View style={styles.content}>
+          <Ionicons name="add" size={25} color="black" style={styles.icon} />
+          <Text style={styles.title}>Añadir nuevo evento</Text>
+        </View>
+        <Text style={styles.subtitle}>Publica tu propio evento en Social Connect y compártelo.</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#23272A',
+  },
   headerContainer: {
     flexDirection: 'row',  
     justifyContent: 'space-between',  

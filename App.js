@@ -3,15 +3,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { CalendarScreen, GastronomiaScreen, HomeScreen, OpcionesScreen, ProfileScreen, SearchNearbyLocation, BuscarScreen, 
-  AñadirScreen, VidaNocturnaScreen } from './src/paginas/tabs/';
+import { CalendarScreen, GastronomiaScreen, HomeScreen, OpcionesScreen, ProfileScreen, SearchNearbyLocation, BuscarScreen,  VidaNocturnaScreen } from './src/paginas/tabs/';
 import { TurismoScreen } from './src/paginas/tabs/TurismoScreen';
 import { MusicaScreen } from './src/paginas/tabs/MusicaScreen';
 import { TeatroYEspectaculoScreen } from './src/paginas/tabs/TeatroYEspectaculoScreen';
 import { LoginScreen } from './src/paginas/LoginScreen';
 import { RegisterScreen } from './src/paginas/RegisterScreen';
 import { EventosDelDiaScreen } from './src/paginas/tabs/EventosDelDiaScreen';
-
+import { AnadirScreen } from './src/paginas/tabs/AnadirScreen';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -43,13 +42,13 @@ export default function App() {
         <Stack.Screen name="Calendario" component={CalendarScreen} />
         <Stack.Screen name="SearchNearbyLocation" component={SearchNearbyLocation} />
         <Stack.Screen name="Buscar" component={BuscarScreen} />
-        <Stack.Screen name="Añadir" component={AñadirScreen} />
         <Stack.Screen name ="Gastronomia" component={GastronomiaScreen} />
         <Stack.Screen name="vidaNocturna" component={VidaNocturnaScreen} />
         <Stack.Screen name="turismo" component={TurismoScreen} />
         <Stack.Screen name="musica" component={MusicaScreen} />
         <Stack.Screen name="teatroYEspectaculo" component={TeatroYEspectaculoScreen} />
         <Stack.Screen name="EventosDelDia" component={EventosDelDiaScreen} />
+        <Stack.Screen name="Anadir" component={AnadirScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
