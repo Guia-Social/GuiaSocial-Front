@@ -6,22 +6,53 @@ export function RegisterScreen() {
 
   /* Inicializo las variables para poder usarlas en el registro */
   const [nick, setNick] = useState('');
-  const [nombreCompleto, setNombreCompleto] = useState('');
+  // const [nombreCompleto, setNombreCompleto] = useState('');
   const [correo, setCorreo] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const [confirmarContraseña, setConfirmarContraseña] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [confirmarContrasena, setConfirmarContrasena] = useState('');
   
   const navigation = useNavigation();  // Para tener la navegacion habilitada
 
+  // Metodo para registrar los usuarios en MySQL
+  const registrarEnSQL = async () => {
+    const userData = {
+      name: nick,
+      password: contrasena,
+      email: correo
+    };
+
+    try {//Recordar cambiar la ip por la tuya
+      const response = await fetch("http://192.168.0.31:8080/api/v1/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.text();
+        console.error("Respuesta del servidor:", errorResponse);
+        throw new Error("Error al registrar en SQL: " + errorResponse);
+      }
+
+      const data = await response.json();
+      console.log("Usuario registrado en SQL:", data);
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error("Error al registrar en SQL:", error.message);
+    }
+  };
+
   const handleRegister = async () => {
-    if (contraseña !== confirmarContraseña) {
+    if (contrasena !== confirmarContrasena) {
         Alert.alert('Error', 'Las contraseñas no coinciden');
         return;
     }
 
-    if (nick && nombreCompleto && correo && contraseña && confirmarContraseña) {
+    if (nick && correo && contrasena && confirmarContrasena) {
         Alert.alert('Registro exitoso', 'Tu cuenta ha sido creada', [
-          { text: 'OK', onPress: () => navigation.navigate('Login') } 
+          { text: 'OK', onPress: () => registrarEnSQL()} 
         ]);
     } else {
         Alert.alert('Error', 'Por favor, completa todos los campos');
@@ -42,6 +73,7 @@ export function RegisterScreen() {
       />
 
       {/* Campo de entrada de texto para el nombre completo del usuario */}
+      {/*
       <TextInput
         style={styles.input}
         placeholder="Introduzca su nombre completo"
@@ -49,6 +81,7 @@ export function RegisterScreen() {
         value={nombreCompleto}
         onChangeText={setNombreCompleto}
       />
+      */}
 
       {/* Campo de entrada de texto para el correo electronico */}
       <TextInput
@@ -66,8 +99,8 @@ export function RegisterScreen() {
         placeholder="Introduzca su contraseña"
         placeholderTextColor="#aaa"
         secureTextEntry
-        value={contraseña}
-        onChangeText={setContraseña}
+        value={contrasena}
+        onChangeText={setContrasena}
       />
 
       {/* Campo de entrada de texto para la confirmación de la contraseña */}
@@ -76,8 +109,8 @@ export function RegisterScreen() {
         placeholder="Confirmar contraseña"
         placeholderTextColor="#aaa"
         secureTextEntry
-        value={confirmarContraseña}
-        onChangeText={setConfirmarContraseña}
+        value={confirmarContrasena}
+        onChangeText={setConfirmarContrasena}
       />
 
       {/* Boton que finaliza el registro del usuario */}
