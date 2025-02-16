@@ -10,13 +10,9 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.4",
-    "@react-native-async-storage/async-storage": "^2.1.0",
-<<<<<<< HEAD
-=======
-    "@react-native-community/datetimepicker": "^8.3.0",
->>>>>>> 79801f55c71529f6b967ad6c31b76e043bc84c19
-    "@react-native-community/datetimepicker": "8.2.0",
-    "@react-native-picker/picker": "^2.11.0",
+    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-community/datetimepicker": "^8.2.0",
+    "@react-native-picker/picker": "^2.9.0",
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/stack": "^7.1.1",
     "axios": "^1.7.9",
@@ -27,10 +23,9 @@
     "expo-status-bar": "~2.0.1",
     "guiasocial": "file:",
     "react": "18.3.1",
-    "react-native": "0.76.6",
+    "react-native": "^0.76.7",
     "react-native-geolocation-service": "^5.3.1",
-    "react-native-maps": "^1.20.1"
-    "react-native-maps": "1.18.0"
+    "react-native-maps": "^1.18.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
