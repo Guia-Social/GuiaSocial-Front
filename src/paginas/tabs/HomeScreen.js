@@ -25,6 +25,11 @@ export function HomeScreen() {
     Linking.openURL(url).catch(err => console.error("No se pudo abrir la ubicación", err));
   };
 
+  const handleEventPress = (evento) => {
+    console.log(evento); // Asegúrate de que este objeto contenga latitud y longitud
+    navigation.navigate('EventoScreen', { evento });
+  };  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -78,13 +83,13 @@ export function HomeScreen() {
 
       {/* Lista de eventos */}
       <ScrollView>
-        <View style={styles.eventList}>
+        <TouchableOpacity style={styles.eventList}>
           {eventos.map((evento) => (
             <View key={evento.eventoId} style={styles.eventCard}>
               <Image 
-              source={{ uri: evento.imagen }} 
-              style={styles.eventImage} 
-              /> 
+                source={{ uri: evento.imagen }} 
+                style={styles.eventImage} 
+              />
               <Text style={styles.eventTitle}>{evento.nombre}</Text>
               <Text style={styles.eventDescription}>{evento.descripcion}</Text>
               <Text style={styles.eventType}>{evento.tipo_de_evento}</Text>
@@ -96,10 +101,14 @@ export function HomeScreen() {
                 <Image source={require('../../../assets/localizacion.png')} style={styles.locationIconEvent} />
                 <Text>{evento.ciudad}</Text>
               </TouchableOpacity>
-              
+
+              {/* Al pulsar sobre un evento, ir a la pantalla EventoScreen */}
+              <TouchableOpacity onPress={() => handleEventPress(evento)}>
+                <Text style={styles.viewEventText}>Ver evento</Text>
+              </TouchableOpacity>
             </View>
           ))}
-        </View>
+        </TouchableOpacity>
       </ScrollView>
 
       {/* Boton localizaciones cercanas */}
@@ -129,10 +138,9 @@ export function HomeScreen() {
           </TouchableOpacity>
         </LinearGradient>
       </View>
-    </View> 
+    </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
