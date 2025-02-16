@@ -32,31 +32,28 @@ export function SearchNearbyLocationScreen() {
   };
 
   // Función que maneja la búsqueda de eventos con latitud y longitud
-  const fetchNearbyEvents = async (latitude, longitude) => {
+  const fetchNearbyEvents = async (latitud, longitud) => {
     setIsLoading(true);
-
+    
     try {
-      // Realizamos un fetch a la API de OpenCage para obtener la ciudad basada en las coordenadas
       const response = await fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`
+        `https://api.opencagedata.com/geocode/v1/json?q=${latitud}+${longitud}&key=${apiKey}`
       );
       const data = await response.json();
-      console.log("Datos de la API OpenCage:", data); 
-
+      console.log("Datos de la API OpenCage:", data);
+  
       if (data.results && data.results[0]) {
-        const city = data.results[0].components.city || "Ubicación desconocida"; 
+        const city = data.results[0].components.city || "Ubicación desconocida";
         console.log("Ciudad encontrada:", city);
-
+  
         try {
-          const eventsResponse = await fetch(
-            `YOUR_BACKEND_URL/events?city=${city}`
-          );
+          const eventsResponse = await fetch(`YOUR_BACKEND_URL/events?city=${city}`);
           if (!eventsResponse.ok) {
-            throw new Error("Error al obtener los eventos");
+            throw new Error(`Error al obtener los eventos: ${eventsResponse.statusText}`);
           }
           const eventsData = await eventsResponse.json();
-          console.log("Eventos encontrados:", eventsData); 
-          setEvents(eventsData.events); 
+          console.log("Eventos encontrados:", eventsData);
+          setEvents(eventsData.events);
         } catch (eventError) {
           console.error("Error al obtener eventos:", eventError);
         }
@@ -66,7 +63,7 @@ export function SearchNearbyLocationScreen() {
     } catch (error) {
       console.error("Error al obtener la ciudad:", error);
     }
-
+  
     setIsLoading(false);
   };
 

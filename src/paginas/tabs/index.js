@@ -5,7 +5,7 @@ export { ProfileScreen } from './ProfileScreen';
 export { SearchNearbyLocationScreen } from './SearchNearbyLocationScreen';
 export { BuscarScreen } from './BuscarScreen';
 export { GastronomiaScreen } from './GastronomiaScreen';
-export { AñadirScreen } from './AñadirScreen';
+export { AnadirScreen } from './AnadirScreen';
 export { VidaNocturnaScreen } from './VidaNocturnaScreen';
 export { TurismoScreen } from './TurismoScreen';
 export { MusicaScreen } from './MusicaScreen';
