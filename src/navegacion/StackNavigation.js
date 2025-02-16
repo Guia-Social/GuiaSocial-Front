@@ -4,7 +4,6 @@ import { LoginScreen } from '../paginas/LoginScreen';
 import { RegisterScreen } from '../paginas/RegisterScreen';
 import { HomeScreen } from '../paginas/tabs/HomeScreen';
 
-// Creo la navegacion en stack
 const Stack = createStackNavigator();
 
 const StackNavigator = () => {

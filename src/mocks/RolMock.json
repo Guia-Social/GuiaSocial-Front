@@ -6,5 +6,9 @@
     {
         "rolId" : "2",
         "rolName" : "Usuario"
+    },
+    {
+        "rolId" : "3",
+        "rolName" : "Vip"
     }
 ]

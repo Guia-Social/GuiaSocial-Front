@@ -1,79 +1,57 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
+import EventoMock from '../../mocks/EventoMock.json';
+
 export function HomeScreen() {
   const navigation = useNavigation();
 
-  const eventos = [
-    {
-      id: 1,
-      nombre: 'Antique Theatro',
-      lugar: 'Discoteca',
-      ubicacion: 'Sevilla',
-      calle: 'C. Matemáticos Rey Pastor y Castro, s/n, 41092 Sevilla',
-    },
-    {
-      id: 2,
-      nombre: 'Festival de Música',
-      lugar: 'Parque Central',
-      ubicacion: 'Cádiz',
-      calle: 'Av. del Mar, s/n, 11011 Cádiz',
-    },
-    {
-      id: 3,
-      nombre: 'Concierto de Jazz',
-      lugar: 'Teatro Alameda',
-      ubicacion: 'Huelva',
-      calle: 'Calle Vázquez López, 12, 21001 Huelva',
-    },
-    {
-      id: 4,
-      nombre: 'Concierto de Jazz',
-      lugar: 'Teatro Alameda',
-      ubicacion: 'Huelva',
-      calle: 'Calle Vázquez López, 12, 21001 Huelva',
-    },
-  ];
+  const [eventos, setEventos] = useState([]);
+
+  useEffect(() => {
+    // Asignamos los datos del JSON a la constante eventos
+    setEventos(EventoMock);
+  }, []);
+
+  const openMap = (url) => {
+    // Usamos Linking para abrir el enlace en Google Maps
+    Linking.openURL(url).catch(err => console.error("No se pudo abrir la ubicación", err));
+  };
+
+  const handleEventPress = (evento) => {
+    console.log(evento); // Asegúrate de que este objeto contenga latitud y longitud
+    navigation.navigate('EventoScreen', { evento });
+  };  
 
   return (
-    <>
+    <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Opciones')}>
-            <Ionicons name="menu" size={40} color="#fff"></Ionicons>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Opciones')}>
+          <Ionicons name="menu" size={40} color="#fff" />
+        </TouchableOpacity>
 
-          {/* Degradado aplicado al borde del calendario */}
-          <LinearGradient
-            colors={['#22c55e', '#9333ea']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.gradientBorder}
-          >
-            <TouchableOpacity style={styles.calendarButton} onPress={() => navigation.navigate('Calendario')}>
-              <Text style={styles.calendarTitle}>CALENDARIO</Text>
-              <Ionicons name="chevron-down" size={24} color="#fff"></Ionicons>
-            </TouchableOpacity>
-          </LinearGradient>
-        </View>
+        <LinearGradient
+          colors={['#22c55e', '#9333ea']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradientBorder}
+        >
+          <TouchableOpacity style={styles.calendarButton} onPress={() => navigation.navigate('Calendario')}>
+            <Text style={styles.calendarTitle}>CALENDARIO</Text>
+            <Ionicons name="chevron-down" size={24} color="#fff" />
+          </TouchableOpacity>
+        </LinearGradient>
 
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
-          <Ionicons name="person-circle" size={50} color="#fff"></Ionicons>
+          <Ionicons name="person-circle" size={50} color="#fff" />
         </TouchableOpacity>
       </View>
 
-      {/* Scroll horizontal de categorías de eventos */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.eventCategories}
-      >
-        <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Todos')}>
-          <Text style={styles.eventCategoryButtonText}>TODOS</Text>
-        </TouchableOpacity>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.eventCategories}>
+        {/* Agregar los botones de categorías de eventos */}
         <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Gastronomia')}>
           <Text style={styles.eventCategoryButtonText}>GASTRONOMÍA</Text>
         </TouchableOpacity>
@@ -96,20 +74,32 @@ export function HomeScreen() {
 
       {/* Lista de eventos */}
       <ScrollView>
-        <View style={styles.eventList}>
+        <TouchableOpacity style={styles.eventList}>
           {eventos.map((evento) => (
-            <View key={evento.id} style={styles.eventCard}>
-              <Image
-                source={require('../../../assets/imagen-evento.png')}
-                style={styles.eventImage}
+            <View key={evento.eventoId} style={styles.eventCard}>
+              <Image 
+                source={{ uri: evento.imagen }} 
+                style={styles.eventImage} 
               />
               <Text style={styles.eventTitle}>{evento.nombre}</Text>
-              <Text style={styles.eventLocation}>{evento.lugar}</Text>
-              <Text style={styles.eventCity}>{evento.ubicacion}</Text>
-              <Text style={styles.eventStreet}>{evento.calle}</Text>
+              <Text style={styles.eventDescription}>{evento.descripcion}</Text>
+              <Text style={styles.eventType}>{evento.tipo_de_evento}</Text>
+              <Text style={styles.categoryEventName}>{evento.nombre_categoria}</Text>
+              <Text style={styles.eventDate}>Del {evento.fechaInicio} Al {evento.fechaFin}</Text>
+
+              {/* Icono de mapa para abrir la ubicación en Google Maps */}
+              <TouchableOpacity style={styles.locationIconEventCity} onPress={() => openMap(evento.ubicacion)}>
+                <Image source={require('../../../assets/localizacion.png')} style={styles.locationIconEvent} />
+                <Text>{evento.ciudad}</Text>
+              </TouchableOpacity>
+
+              {/* Al pulsar sobre un evento, ir a la pantalla EventoScreen */}
+              <TouchableOpacity onPress={() => handleEventPress(evento)}>
+                <Text style={styles.viewEventText}>Ver evento</Text>
+              </TouchableOpacity>
             </View>
           ))}
-        </View>
+        </TouchableOpacity>
       </ScrollView>
 
       {/* Boton localizaciones cercanas */}
@@ -121,25 +111,25 @@ export function HomeScreen() {
           end={{ x: 1, y: 1 }}
           style={styles.gradientBorder}
         >
-          <View style={styles.backgroundContainer}>
+          <TouchableOpacity style={styles.backgroundContainer} onPress={() => navigation.navigate('SearchNearbyLocation')}>
             <Image
               source={require('../../../assets/direccion-vector.png')}
               style={styles.iconLocationImage}
             />
-            <TouchableOpacity style={styles.containerTextButton} onPress={() => navigation.navigate('SearchNearbyLocation')}>
+            <View style={styles.containerTextButton} >
               <Text style={styles.nearEvents}>Eventos cerca de</Text>
               <Text style={styles.nearEventsLocation}>Sevilla - San Bernardo</Text>
-            </TouchableOpacity>
+            </View>
             <View style={styles.iconArrowUpImageContainer}>
               <Image
                 source={require('../../../assets/flecha.png')}
                 style={styles.iconArrowUpImage}
               />
             </View>
-          </View>
+          </TouchableOpacity>
         </LinearGradient>
       </View>
-    </>
+    </View>
   );
 }
 
@@ -149,31 +139,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#23272A',
   },
 
+  /* Cabecera */
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 60,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingBottom: 20,
-    backgroundColor: '#1F1F1F',
+    backgroundColor: '#23272A',
   },
-
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  menuButton: {
-    marginRight: 50,
-  },
-
+ 
   gradientBorder: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1F1F1F',
+    backgroundColor: '#23272A',
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: 100,
     paddingVertical: 2,
     paddingHorizontal: 2,
   },
@@ -182,7 +164,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1F1F1F',
+    backgroundColor: '#23272A',
     borderRadius: 30,
     paddingVertical: 6,
     paddingHorizontal: 12,
@@ -195,32 +177,31 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
 
+  /* Navegacion horizontal */
+
   eventCategories: {
     flexDirection: 'row',
     backgroundColor: '#D9D9D9',
-    paddingVertical: 10,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    marginBottom: 10, // Añadimos espacio entre la cabecera y las categorías
+    paddingVertical: 20,
+    paddingHorizontal: 5,
+    marginBottom: 20, 
   },
 
   eventCategoryButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 25,
+    paddingHorizontal: 15,
     borderRadius: 10,
-    marginRight: 15, // Espacio entre los botones
-    backgroundColor: '#ffffff', // Fondo blanco para los botones
-    justifyContent: 'center', // Centra el contenido dentro del botón
-    alignItems: 'center', // Asegura que el texto esté centrado
-    height: 50, // Asegura que los botones tengan una altura fija
+    marginRight: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: 50, 
   },
 
   eventCategoryButtonText: {
-    color: '#000000',  // Color de texto negro
+    color: '#000000', 
     fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',  // Centra el texto dentro del botón
-    flex: 1, // Asegura que el texto ocupe todo el espacio disponible
+    textAlign: 'center',  
+    flex: 1, 
   },
 
   eventList: {
@@ -237,104 +218,128 @@ const styles = StyleSheet.create({
 
   eventImage: {
     width: '100%',
-    borderRadius: 15,
-    marginBottom: 10,
+    height: 200,
+    borderRadius: 10,
+    resizeMode: 'cover', 
+
   },
 
   eventTitle: {
     padding: 10,
     color: '#000000',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
   },
 
   eventLocation: {
     paddingHorizontal: 10,
+    paddingTop: 10, 
     color: '#000000',
     fontSize: 14,
-    fontWeight: 'bold',
   },
 
   eventCity: {
     paddingHorizontal: 10,
+    paddingBottom: 15,
+    color: '#000000',
+    fontSize: 14,
+  },
+
+  eventDate: {
+    paddingHorizontal: 10,
     color: '#000000',
     fontSize: 14,
     fontWeight: 'bold',
   },
 
-  eventStreet: {
+  eventDescription: {
     paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingVertical: 7,
     color: '#000000',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+
+  eventType: {
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  categoryEventName: {
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'normal',
   },
 
   /* Estilos boton localizacion cercana */
   buttonLocation: {
-    borderRadius: 50,
+    position: 'absolute',
+    bottom: 20, 
+    left: '5%',
+    width: '90%',
+    borderRadius: 100,
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    position: 'fixed',
-    bottom: '7%',
-    width: '90%',
-    left: '5%',
-    borderWidth: 1,
-    borderColor: 'transparent',
-    paddingVertical: 3,
-    paddingHorizontal: 3,
-    zIndex: 10000,
-  },
-
-  nearByLocationsContainerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    backgroundColor: '#2F2F2F',
-    borderRadius: 50,
-    paddingHorizontal: 35,
-    paddingVertical: 15,
-  },
-
-  backgroundContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2F2F2F',
-    borderRadius: 50,
-  },
-
-  containerTextButton: {
-    flexDirection: 'column', // Organiza los textos en una columna
-    alignItems: 'flex-start', // Centra los textos horizontalmente
-    justifyContent: 'flex-start', // Centra los textos verticalmente dentro del contenedor
-    marginHorizontal: 7, // Espaciado horizontal
-    width: '80%', // Ancho del contenedor de texto
+    zIndex: 1000, 
   },
   
+  backgroundContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#23272A',
+    borderRadius: 100,
+    paddingVertical: 10, 
+    paddingHorizontal: 16, 
+  },
+
   nearEvents: {
     fontSize: 14,
     color: '#fff',
     fontWeight: 'normal',
-    marginBottom: 5, // Espacio entre las líneas de texto
-    textAlign: 'center', // Centra el texto en la línea
-    marginLeft: 20,
+    marginBottom: 5,
   },
   
   nearEventsLocation: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
-    textAlign: 'center', // Centra el texto en la línea
-    marginLeft: 20,
   },
   
   iconLocationImage: {
-    width: 16,   // Reducir el tamaño del icono
-    height: 16,  // Reducir el tamaño del icono
-    marginLeft: 10,
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
+    marginRight: 20, 
   },
+
+  iconArrowUpImageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8, 
+  },
+
+  iconArrowUpImage: {
+    width: 24, 
+    height: 18,
+    resizeMode: 'contain', 
+    marginLeft: 12, 
+  },
+
+  locationIconEvent: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain'
+  },
+
+  locationIconEventCity: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
 });
