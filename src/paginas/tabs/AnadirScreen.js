@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, ScrollView, Alert, Keyboard } from 'react-native';
+import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
@@ -8,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import debounce from 'lodash.debounce';
 import * as Location from 'expo-location'; // Usamos expo-location para permisos y ubicación
+
 
 export function AnadirScreen() {
   const [nombre, setNombre] = useState('');
@@ -115,8 +117,9 @@ export function AnadirScreen() {
   };
 
   const tomarFoto = async () => {
+
     await obtenerPermisoCamara(); // Solicita permiso antes de abrir la cámara
-    
+ 
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
@@ -188,6 +191,7 @@ export function AnadirScreen() {
           textAlignVertical="top"
           onSubmitEditing={() => Keyboard.dismiss()}
           blurOnSubmit={true}
+
         />
 
         <View style={styles.pickerContainer}>

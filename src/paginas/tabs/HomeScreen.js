@@ -5,15 +5,19 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
 import EventoMock from '../../mocks/EventoMock.json';
+import UserMock from '../../mocks/UserMock.json';
+
 
 export function HomeScreen() {
   const navigation = useNavigation();
-
   const [eventos, setEventos] = useState([]);
+  const [usuarioLogueado, setUsuarioLogueado] = useState(null);
 
   useEffect(() => {
     // Asignamos los datos del JSON a la constante eventos
     setEventos(EventoMock);
+    setUsuarioLogueado(UserMock[0]); 
+
   }, []);
 
   const openMap = (url) => {
@@ -45,8 +49,13 @@ export function HomeScreen() {
           </TouchableOpacity>
         </LinearGradient>
 
+        {/* Imagen de usuario si hay sesión iniciada, sino mostrar icono */}
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
-          <Ionicons name="person-circle" size={50} color="#fff" />
+          {usuarioLogueado ? (
+            <Image source={{ uri: usuarioLogueado.fotoDePerfil }} style={styles.profileImage} />
+          ) : (
+            <Ionicons name="person-circle" size={50} color="#fff" />
+          )}
         </TouchableOpacity>
       </View>
 
@@ -312,6 +321,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   
+
   iconLocationImage: {
     width: 24,
     height: 24,
@@ -325,6 +335,27 @@ const styles = StyleSheet.create({
     padding: 8, 
   },
 
+  iconArrowUpImageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8, 
+  },
+
+  iconArrowUpImage: {
+    width: 24, 
+    height: 18,
+    resizeMode: 'contain', 
+    marginLeft: 12, 
+  },
+  profileButton: {
+    borderRadius: 50,
+    overflow: 'hidden',
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
   iconArrowUpImage: {
     width: 24, 
     height: 18,
