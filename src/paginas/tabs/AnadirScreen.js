@@ -10,9 +10,12 @@ import debounce from 'lodash.debounce';
 
 export function AnadirScreen() {
   const [nombre, setNombre] = useState('');
+  const [descripcion, setDescripcion] = useState('');
   const [categoria, setCategoria] = useState('gastronomia');
-  const [fecha, setFecha] = useState(new Date());
-  const [mostrarFecha, setMostrarFecha] = useState(false);
+  const [fechaInicio, setFechaInicio] = useState(new Date()); // Fecha de inicio
+  const [fechaFin, setFechaFin] = useState(new Date()); // Fecha de fin
+  const [mostrarFechaInicio, setMostrarFechaInicio] = useState(false);
+  const [mostrarFechaFin, setMostrarFechaFin] = useState(false);
   const [ubicacion, setUbicacion] = useState({ latitude: 37.3886, longitude: -5.9823 });
   const [direccion, setDireccion] = useState('');
   const [imagen, setImagen] = useState(null);
@@ -24,6 +27,16 @@ export function AnadirScreen() {
     longitudeDelta: 0.01,
   });
   const navigation = useNavigation();
+
+  const onDateChange = (event, selectedDate, tipoFecha) => {
+    if (tipoFecha === 'inicio') {
+      setMostrarFechaInicio(false);
+      setFechaInicio(selectedDate);
+    } else if (tipoFecha === 'fin') {
+      setMostrarFechaFin(false);
+      setFechaFin(selectedDate);
+    }
+  };
 
   const API_KEY = 'a169ac268a904bb694f11b32f20dbc55';
 
@@ -125,6 +138,17 @@ export function AnadirScreen() {
     );
   };
 
+  const crearEvento = () => {
+    if (!nombre || !descripcion || !categoria || !fechaInicio || !fechaFin || !direccion || !imagen) {
+      setError('Por favor, completa todos los campos.');
+      return;
+    }
+    setError('');
+    // Aquí iría la lógica para crear el evento (guardar en una base de datos, API, etc.)
+    // Si no hay errores, navega a la pantalla de inicio (Home)
+    navigation.navigate('Home');
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -139,10 +163,23 @@ export function AnadirScreen() {
           onChangeText={setNombre}
           style={styles.input}
           placeholder="Nombre del Evento"
+          placeholderTextColor="#FFF"
         />
-        
+        <TextInput
+          value={descripcion}
+          onChangeText={setDescripcion}
+          style={[styles.input, styles.largeInput]}
+          placeholder="Descripción del Evento"
+          placeholderTextColor="#FFF"
+          maxLength={500}
+          multiline={true}
+          numberOfLines={4}
+          textAlignVertical="top"
+        />
+
         <View style={styles.pickerContainer}>
-          <Picker selectedValue={categoria} onValueChange={(itemValue) => setCategoria(itemValue)}>
+          <Picker selectedValue={categoria} onValueChange={(itemValue) => setCategoria(itemValue)} style={styles.picker}>
+            <Picker.Item label="Categoría del evento" value="" />
             <Picker.Item label="Gastronomía" value="gastronomia" />
             <Picker.Item label="Vida Nocturna" value="vida_nocturna" />
             <Picker.Item label="Turismo" value="turismo" />
@@ -150,32 +187,64 @@ export function AnadirScreen() {
             <Picker.Item label="Teatro y Espectáculos" value="teatro" />
           </Picker>
         </View>
-        
-        <TouchableOpacity onPress={() => setMostrarFecha(true)} style={styles.button}>
-          <Text style={styles.buttonText}>Seleccionar Fecha</Text>
+
+        {/* Botón para seleccionar fecha de inicio */}
+        <TouchableOpacity onPress={() => setMostrarFechaInicio(true)} style={styles.button}>
+          <Text style={styles.buttonText}>Seleccionar Fecha de Inicio</Text>
         </TouchableOpacity>
-        {mostrarFecha && (
+
+        {/* Mostrar la fecha de inicio seleccionada */}
+        {fechaInicio && (
+          <Text style={styles.selectedDateText}>
+            Fecha de Inicio: {fechaInicio.toLocaleDateString()}
+          </Text>
+        )}
+
+        {/* DateTimePicker para la fecha de inicio */}
+        {mostrarFechaInicio && (
           <DateTimePicker
-            value={fecha}
+            value={fechaInicio}
             mode="date"
             display="default"
             minimumDate={new Date()}
             maximumDate={new Date(new Date().setDate(new Date().getDate() + 31))}
-            onChange={(event, selectedDate) => {
-              setMostrarFecha(false);
-              if (selectedDate) setFecha(selectedDate);
-            }}
+            onChange={(event, selectedDate) => onDateChange(event, selectedDate, 'inicio')}
           />
         )}
-        
+
+        {/* Botón para seleccionar fecha de fin */}
+        <TouchableOpacity onPress={() => setMostrarFechaFin(true)} style={styles.button}>
+          <Text style={styles.buttonText}>Seleccionar Fecha de Fin</Text>
+        </TouchableOpacity>
+
+        {/* Mostrar la fecha de fin seleccionada */}
+        {fechaFin && (
+          <Text style={styles.selectedDateText}>
+            Fecha de Fin: {fechaFin.toLocaleDateString()}
+          </Text>
+        )}
+
+        {/* DateTimePicker para la fecha de fin */}
+        {mostrarFechaFin && (
+          <DateTimePicker
+            value={fechaFin}
+            mode="date"
+            display="default"
+            minimumDate={fechaInicio} // La fecha de fin no puede ser antes de la fecha de inicio
+            maximumDate={new Date(new Date().setDate(new Date().getDate() + 31))}
+            onChange={(event, selectedDate) => onDateChange(event, selectedDate, 'fin')}
+          />
+        )}
+
         <TextInput
           value={direccion}
           onChangeText={setDireccion}
           style={styles.input}
           placeholder="Escribe la dirección"
+          placeholderTextColor="#FFF"
         />
         {error && <Text style={styles.errorText}>{error}</Text>}
-        
+
         <MapView
           style={styles.map}
           region={region}
@@ -183,10 +252,24 @@ export function AnadirScreen() {
         >
           <Marker coordinate={ubicacion} />
         </MapView>
-        
-        {imagen && <Image source={{ uri: imagen }} style={styles.image} />}
-        <TouchableOpacity onPress={elegirFuenteImagen} style={styles.imagePickerContainer}>
-          <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.imagePreview} />
+
+        <View style={styles.imageContainer}>
+          {imagen && <Image source={{ uri: imagen }} style={styles.image} />}
+          <TouchableOpacity onPress={elegirFuenteImagen} style={imagen ? styles.cambiarImagenContainer : styles.imagePickerContainer}>
+            {imagen ? (
+              <Text style={styles.cambiarImagenTexto}>Cambiar imagen</Text>
+            ) : (
+              <Image 
+                source={{ uri: 'https://cdn-icons-png.flaticon.com/512/1375/1375157.png' }} 
+                style={styles.imagePreview} 
+              />
+            )}
+          </TouchableOpacity>
+        </View>
+
+        {/* Botón para crear evento */}
+        <TouchableOpacity onPress={crearEvento} style={styles.buttonEvento}>
+          <Text style={styles.buttonText}>Crear Evento</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -231,29 +314,44 @@ const styles = StyleSheet.create({
   formContainer: {
     margin: 20,
     flex: 1,
-    padding: 20,
+    padding: 30,
     backgroundColor: '#D9D9D9',
     borderRadius: 10,
-    marginTop: 150,
+    marginTop: 175,
   },
   input: {
-    backgroundColor: '#333',
+    backgroundColor: '#323639',
     color: '#FFF',
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
   },
+  largeInput: {
+    height: 150, 
+    textAlignVertical: 'top',
+  },
   pickerContainer: {
-    backgroundColor: '#333',
+    backgroundColor: '#323639',
     borderRadius: 5,
     marginBottom: 10,
   },
+  picker: {
+    color: '#FFF',
+  },
   button: {
-    backgroundColor: '#444',
+    backgroundColor: '#323639',
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
     marginBottom: 10,
+    marginTop: 10,
+  },
+  buttonEvento: {
+    backgroundColor: '#323639',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    marginTop: 10,
+    alignItems: 'center',
   },
   buttonText: {
     color: '#FFF',
@@ -264,22 +362,48 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 10,
   },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
+  selectedDateText: {
+    fontSize: 13,
     marginBottom: 10,
+    fontWeight: 'bold',
+  },
+  imageContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+    resizeMode: 'cover', 
+    marginBottom: 20,
+  },
+  cambiarImagenContainer: {
+    backgroundColor: '#323639',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  cambiarImagenTexto: {
+    color: '#FFF',
+    fontSize: 16,
   },
   imagePickerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  imagePreview: {
     width: 150,
     height: 150,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#999',
+    alignItems: 'center', 
+    justifyContent: 'center',
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: '#323639',
+    overflow: 'hidden',
+  },
+
+  imagePreview: {
+    width: 100, 
+    height: 100,
+    resizeMode: 'contain', 
   },
 });
