@@ -10,7 +10,12 @@ import MapView, { Marker } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import debounce from 'lodash.debounce';
+<<<<<<< HEAD
 import * as Location from 'expo-location'; // Para permisos y ubicación
+=======
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location'; // Usamos expo-location para permisos y ubicación
+>>>>>>> origin/Kike
 
 export function AnadirScreen() {
   const [nombre, setNombre] = useState('');
@@ -24,6 +29,8 @@ export function AnadirScreen() {
   const [direccion, setDireccion] = useState('');
   const [imagen, setImagen] = useState(null);
   const [error, setError] = useState('');
+  const [tipoEvento, setTipoEvento] = useState('amigos');
+  const [ciudad, setCiudad] = useState('')
   const [region, setRegion] = useState({
     latitude: 37.3886,
     longitude: -5.9823,
@@ -44,6 +51,12 @@ export function AnadirScreen() {
     }
   };
 
+<<<<<<< HEAD
+=======
+  // API de google maps
+  const API_KEY = 'a169ac268a904bb694f11b32f20dbc55';
+
+>>>>>>> origin/Kike
   const obtenerUbicacion = async (direccion) => {
     if (direccion.trim() === '') {
       setError('');
@@ -126,14 +139,72 @@ export function AnadirScreen() {
     );
   };
 
-  const crearEvento = () => {
-    if (!nombre || !descripcion || !categoria || !fechaInicio || !fechaFin || !direccion || !imagen) {
+  const crearEvento = async () => {
+    if (!nombre || !descripcion || !categoria || !fechaInicio || !fechaFin || !direccion || !imagen || !tipoEvento || !ciudad) {
       setError('Por favor, completa todos los campos.');
       return;
     }
+  
     setError('');
+<<<<<<< HEAD
     navigation.navigate('Home');
+=======
+  
+    try {
+      const token = await AsyncStorage.getItem('token'); // Obtener el token
+  
+      if (!token) {
+        Alert.alert('Error', 'No se encontró el token de autenticación. Inicia sesión nuevamente.');
+        return;
+      }
+  
+      const eventoData = {
+        nombre: nombre,
+        descripcion: descripcion,
+        categoriaNombre: categoria,
+        tipoEvento: tipoEvento,
+        fechaInicio: fechaInicio.toISOString(),
+        fechaFin: fechaFin.toISOString(),
+        ubicacion: direccion,
+        ciudadNombre: ciudad,
+        imagen: imagen,
+        usuarioNombre: "Enrique" //Provisional
+      };
+  
+      const response = await fetch('http://192.168.0.31:8080/api/v1/evento/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Agregar el token en la cabecera
+        },
+        body: JSON.stringify(eventoData)
+      });
+
+      // const data = await response.json();
+  
+      // ⚠️ Verifica si la respuesta tiene contenido antes de parsearla
+      const responseText = await response.text(); 
+      console.log('Respuesta del servidor:', responseText);
+
+      if (!responseText) {
+        throw new Error('El servidor devolvió una respuesta vacía.');
+      }
+
+      const data = JSON.parse(responseText); // Solo intentar parsear si hay contenido
+  
+      if (response.ok) {
+        Alert.alert('Éxito', 'Evento creado correctamente.');
+        navigation.navigate('Home');
+      } else {
+        setError(data.message || 'Error al crear el evento');
+      }
+    } catch (error) {
+      console.error('Error al crear evento:', error);
+      setError('Error al conectar con el servidor.');
+    }
+>>>>>>> origin/Kike
   };
+  
 
   return (
     <ScrollView style={styles.container}>
@@ -180,13 +251,72 @@ export function AnadirScreen() {
 
         {mostrarFechaFin && <DateTimePicker value={fechaFin} mode="date" display="default" onChange={(e, date) => onDateChange(e, date, 'fin')} />}
 
+<<<<<<< HEAD
         <TextInput value={direccion} onChangeText={setDireccion} style={styles.input} placeholder="Escribe la dirección" placeholderTextColor="#FFF" />
+=======
+        {/* DateTimePicker para la fecha de fin */}
+        {mostrarFechaFin && (
+          <DateTimePicker
+            value={fechaFin}
+            mode="date"
+            display="default"
+            minimumDate={fechaInicio} // La fecha de fin no puede ser antes de la fecha de inicio
+            maximumDate={new Date(new Date().setDate(new Date().getDate() + 31))}
+            onChange={(event, selectedDate) => onDateChange(event, selectedDate, 'fin')}
+          />
+        )}
+
+        <TextInput
+          value={ciudad}
+          onChangeText={setCiudad}
+          style={styles.input}
+          placeholder="Nombre de la ciudad / pueblo"
+          placeholderTextColor="#FFF"
+        />
+
+        <TextInput
+          value={direccion}
+          onChangeText={setDireccion}
+          style={styles.input}
+          placeholder="Escribe la dirección"
+          placeholderTextColor="#FFF"
+        />
+>>>>>>> origin/Kike
         {error && <Text style={styles.errorText}>{error}</Text>}
 
         <MapView style={styles.map} region={region}>
           <Marker coordinate={ubicacion} />
         </MapView>
 
+<<<<<<< HEAD
+=======
+        <View style={styles.imageContainer}>
+          {imagen && <Image source={{ uri: imagen }} style={styles.image} />}
+          <TouchableOpacity onPress={elegirFuenteImagen} style={imagen ? styles.cambiarImagenContainer : styles.imagePickerContainer}>
+            {imagen ? (
+              <Text style={styles.cambiarImagenTexto}>Cambiar imagen</Text>
+            ) : (
+              <Image 
+                source={{ uri: 'https://cdn-icons-png.flaticon.com/512/1375/1375157.png' }} 
+                style={styles.imagePreview} 
+              />
+            )}
+          </TouchableOpacity>
+
+
+          <View style={styles.pickerContainer}>
+          <Picker selectedValue={tipoEvento} onValueChange={(itemValue) => setTipoEvento(itemValue)} style={styles.picker}>
+            <Picker.Item label="Tipo de evento" value="" />
+            <Picker.Item label="Amigos" value="amigos" />
+            <Picker.Item label="VIP" value="vip" />
+            <Picker.Item label="Ayuntamiento" value="ayuntamiento" />
+          </Picker>
+        </View>
+
+        </View>
+
+        {/* Botón para crear evento */}
+>>>>>>> origin/Kike
         <TouchableOpacity onPress={crearEvento} style={styles.buttonEvento}>
           <Text style={styles.buttonText}>Crear Evento</Text>
         </TouchableOpacity>
