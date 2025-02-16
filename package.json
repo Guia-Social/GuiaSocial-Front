@@ -16,10 +16,12 @@
     "@react-navigation/stack": "^7.1.1",
     "expo": "~52.0.28",
     "expo-linear-gradient": "~14.0.2",
+    "expo-location": "~18.0.6",
     "expo-status-bar": "~2.0.1",
     "guiasocial": "file:",
     "react": "18.3.1",
     "react-native": "0.76.6",
+    "react-native-geolocation-service": "^5.3.1",
     "react-native-maps": "^1.20.1"
   },
   "devDependencies": {
