@@ -1,52 +1,72 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import usersData from '../mocks/UserMock.json'; // Asegúrate de tener la ruta correcta al archivo
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function LoginScreen() {
   const navigation = useNavigation();
-
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // Para mostrar errores si las credenciales son incorrectas
+  const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    // Buscar al usuario que coincida con el correo y la contraseña
-    const user = usersData.find(
-      (user) => user.email === email && user.password === password
-    );
+  const handleLogin = async () => {
+    if (!name || !password) {
+      setError('Por favor, completa todos los campos.');
+      return;
+    }
 
-    if (user) {
-      // Si el usuario existe y las credenciales son correctas, navega a Home
+    const userData = {
+      name: name, // Se usa 'name' en lugar de 'email'
+      password: password,
+    };
+
+    try {
+      const response = await fetch("http://192.168.0.31:8080/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.text();
+        setError("Nombre de usuario o contraseña incorrectos");
+        console.error("Error del servidor:", errorResponse);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Login exitoso:", data);
+
+      // Guardar el token en AsyncStorage
+      await AsyncStorage.setItem("token", data.token);
+
+      // Redirigir a la pantalla de inicio
       navigation.navigate('Home');
-    } else {
-      // Si las credenciales son incorrectas, muestra un error
-      setError('Correo o contraseña incorrectos');
+
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error.message);
+      setError("Error al conectar con el servidor");
     }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.logoContainer}>
-        <Image
-          source={require('../../assets/icono-perfil.png')}
-          style={styles.logo}
-        />
+        <Image source={require('../../assets/icono-perfil.png')} style={styles.logo} />
       </View>
 
       <Text style={styles.title}>GUÍA SOCIAL</Text>
 
-      {/* Campo para el correo electronico */}
       <TextInput
         style={styles.input}
-        placeholder="Introduzca su correo"
+        placeholder="Introduzca su nick"
         placeholderTextColor="#ccc"
-        keyboardType='email-address'
-        value={email}
-        onChangeText={setEmail}
+        value={name}
+        onChangeText={setName}
       />
 
-      {/* Campo para la contraseña */}
       <TextInput
         style={styles.input}
         placeholder="Introduzca su contraseña"
@@ -56,7 +76,6 @@ export function LoginScreen() {
         onChangeText={setPassword}
       />
 
-      {/* Mostrar el error si las credenciales son incorrectas */}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <TouchableOpacity style={styles.forgotPasswordButton} onPress={() => navigation.navigate('ForgotPassword')}>
@@ -68,8 +87,9 @@ export function LoginScreen() {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.registerText}>¿No tienes cuenta?
-            <Text style={styles.registerLink} onPress={() => navigation.navigate('Registro')}>Crear cuenta</Text>
+        <Text style={styles.registerText}>
+          ¿No tienes cuenta?
+          <Text style={styles.registerLink} onPress={() => navigation.navigate('Registro')}> Crear cuenta</Text>
         </Text>
       </TouchableOpacity>
     </ScrollView>
