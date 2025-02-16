@@ -7,6 +7,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import debounce from 'lodash.debounce';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location'; // Usamos expo-location para permisos y ubicación
 
 export function AnadirScreen() {
@@ -21,6 +22,8 @@ export function AnadirScreen() {
   const [direccion, setDireccion] = useState('');
   const [imagen, setImagen] = useState(null);
   const [error, setError] = useState('');
+  const [tipoEvento, setTipoEvento] = useState('amigos');
+  const [ciudad, setCiudad] = useState('')
   const [region, setRegion] = useState({
     latitude: 37.3886,
     longitude: -5.9823,
@@ -39,6 +42,7 @@ export function AnadirScreen() {
     }
   };
 
+  // API de google maps
   const API_KEY = 'a169ac268a904bb694f11b32f20dbc55';
 
   const obtenerUbicacion = async (direccion) => {
@@ -149,16 +153,68 @@ export function AnadirScreen() {
     );
   };
 
-  const crearEvento = () => {
-    if (!nombre || !descripcion || !categoria || !fechaInicio || !fechaFin || !direccion || !imagen) {
+  const crearEvento = async () => {
+    if (!nombre || !descripcion || !categoria || !fechaInicio || !fechaFin || !direccion || !imagen || !tipoEvento || !ciudad) {
       setError('Por favor, completa todos los campos.');
       return;
     }
+  
     setError('');
-    // Aquí iría la lógica para crear el evento (guardar en una base de datos, API, etc.)
-    // Si no hay errores, navega a la pantalla de inicio (Home)
-    navigation.navigate('Home');
+  
+    try {
+      const token = await AsyncStorage.getItem('token'); // Obtener el token
+  
+      if (!token) {
+        Alert.alert('Error', 'No se encontró el token de autenticación. Inicia sesión nuevamente.');
+        return;
+      }
+  
+      const eventoData = {
+        nombre: nombre,
+        descripcion: descripcion,
+        categoriaNombre: categoria,
+        tipoEvento: tipoEvento,
+        fechaInicio: fechaInicio.toISOString(),
+        fechaFin: fechaFin.toISOString(),
+        ubicacion: direccion,
+        ciudadNombre: ciudad,
+        imagen: imagen,
+        usuarioNombre: "Enrique" //Provisional
+      };
+  
+      const response = await fetch('http://192.168.0.31:8080/api/v1/evento/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Agregar el token en la cabecera
+        },
+        body: JSON.stringify(eventoData)
+      });
+
+      // const data = await response.json();
+  
+      // ⚠️ Verifica si la respuesta tiene contenido antes de parsearla
+      const responseText = await response.text(); 
+      console.log('Respuesta del servidor:', responseText);
+
+      if (!responseText) {
+        throw new Error('El servidor devolvió una respuesta vacía.');
+      }
+
+      const data = JSON.parse(responseText); // Solo intentar parsear si hay contenido
+  
+      if (response.ok) {
+        Alert.alert('Éxito', 'Evento creado correctamente.');
+        navigation.navigate('Home');
+      } else {
+        setError(data.message || 'Error al crear el evento');
+      }
+    } catch (error) {
+      console.error('Error al crear evento:', error);
+      setError('Error al conectar con el servidor.');
+    }
   };
+  
 
   return (
     <ScrollView style={styles.container}>
@@ -250,6 +306,14 @@ export function AnadirScreen() {
         )}
 
         <TextInput
+          value={ciudad}
+          onChangeText={setCiudad}
+          style={styles.input}
+          placeholder="Nombre de la ciudad / pueblo"
+          placeholderTextColor="#FFF"
+        />
+
+        <TextInput
           value={direccion}
           onChangeText={setDireccion}
           style={styles.input}
@@ -278,6 +342,17 @@ export function AnadirScreen() {
               />
             )}
           </TouchableOpacity>
+
+
+          <View style={styles.pickerContainer}>
+          <Picker selectedValue={tipoEvento} onValueChange={(itemValue) => setTipoEvento(itemValue)} style={styles.picker}>
+            <Picker.Item label="Tipo de evento" value="" />
+            <Picker.Item label="Amigos" value="amigos" />
+            <Picker.Item label="VIP" value="vip" />
+            <Picker.Item label="Ayuntamiento" value="ayuntamiento" />
+          </Picker>
+        </View>
+
         </View>
 
         {/* Botón para crear evento */}
