@@ -163,7 +163,7 @@ export function HomeScreen() {
           end={{ x: 1, y: 1 }}
           style={styles.gradientBorder}
         >
-          <TouchableOpacity style={styles.backgroundContainer} onPress={() => navigation.navigate('SearchNearbyLocation')}>
+          <TouchableOpacity style={styles.backgroundContainer}> {/* onPress={() => navigation.navigate('SearchNearbyLocation')}> */}
             <Image
               source={require('../../../assets/direccion-vector.png')}
               style={styles.iconLocationImage}

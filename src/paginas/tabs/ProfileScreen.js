@@ -1,46 +1,71 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export function ProfileScreen() {
+    const [userName, setUserName] = useState(''); // Estado para guardar el nombre del usuario
     const navigation = useNavigation();
-    return (
+
+    useEffect(() => {
+        // Función para obtener el nombre del usuario desde la API
+        const fetchUserData = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token'); // Recuperar el token
+                if (token) {
+                    const response = await fetch('http://192.168.0.31:8080/api/v1/user/me', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`, // Enviar el token en el header
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json(); // Parsear la respuesta a JSON
+                        setUserName(data.username); // Suponiendo que la API devuelve un campo 'username'
+                    } else {
+                        console.error('Error fetching user data:', response.statusText);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user data: ', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    const handleLogout = async () => {
+        // Eliminar el token de AsyncStorage
+        await AsyncStorage.removeItem('token');
         
+        // Restablecer la navegación para que no se pueda volver a la pantalla anterior
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }], // Navega directamente a la pantalla de login
+        });
+    };
+
+    return (
       <View style={styles.container}>
         {/* Perfil de usuario */}
         <View style={styles.profileContainer}>
-            <Ionicons name="person-circle" size={150} color="#fff"></Ionicons>
-            <Text style={styles.userName}>Nombre de usuario</Text>
+            <Ionicons name="person-circle" size={150} color="#fff" />
+            <Text style={styles.userName}>{userName || 'Cargando...'}</Text> {/* Mostrar nombre del usuario */}
         </View>
 
-        {/* Eventos */}
-        <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Eventos</Text>
-            <Text style={styles.sectionItem}>Nº Eventos asistidos: 10</Text>
-            <Text style={styles.sectionItem}>Eventos disponibles: 25</Text>
-        </View>
-
-        {/* Eventos favoritos */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Favoritos</Text>
-          <Text style={styles.sectionItem}>Nº Eventos asistidos favoritos: 6</Text>
-        </View>
-
-        {/* Amigos del usuario */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Amigos</Text>
-          <Text style={styles.sectionItem}>Nº Amigos: 14</Text>
-          <Text style={styles.sectionItem}>Solicitudes de amistad: 9</Text>
-        </View>
-
-        {/* Botón para volver a la pagina principal */}
-        <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
-          <Text style={styles.logoutButtonText}>Volver al inicio</Text>
+        {/* Botón para volver a la página principal */}
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                <LinearGradient colors={['#22c55e', '#9333ea']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.homeButton}>
+                  <Text style={styles.logoutButtonText}>Volver al inicio</Text>
+                </LinearGradient>
         </TouchableOpacity>
 
         {/* Botón de Cerrar Sesión */}
-        <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
         </TouchableOpacity>
       </View>
@@ -51,8 +76,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#121212',
-    alignItems: 'center',
-    paddingTop: 30,
+    justifyContent: 'center',  // Centrar contenido verticalmente
+    alignItems: 'center',  // Centrar contenido horizontalmente
+    paddingHorizontal: 20, // Añadir un poco de margen a los lados para que no esté pegado
   },
   
   profileContainer: {
@@ -60,47 +86,21 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 10,
-  },
-  
   userName: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  
-  sectionContainer: {
-    width: '80%',
-    backgroundColor: '#1e1e1e',
-    padding: 15,
-    marginBottom: 15,
-    borderRadius: 10,
-  },
-  
-  sectionTitle: {
-    color: '#70c100',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  
-  sectionItem: {
-    color: '#fff',
-    fontSize: 14,
-    marginBottom: 5,
+    marginTop: 10,
   },
   
   homeButton: {
-    backgroundColor: '#70C100',
+    width: '100%',
+    marginTop: '60%',
     paddingVertical: 12,
-    width: '80%',
+    paddingHorizontal: 90,
     borderRadius: 5,
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 20,
   },
   
   logoutButton: {
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     width: '80%',
     borderRadius: 5,
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 20,
   },
   
   logoutButtonText: {
