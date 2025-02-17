@@ -7,14 +7,53 @@ import { Ionicons } from '@expo/vector-icons';
 // Importo el mock para los eventos
 import EventoMock from '../../mocks/EventoMock.json';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export function TurismoScreen() {
   const navigation = useNavigation();
   const [eventos, setEventos] = useState([]);
 
   useEffect(() => {
-    // Filtramos los eventos que tienen tipo "MUSICA"
-    const eventosMusica = EventoMock.filter(evento => evento.tipo_de_evento === 'Turismo');
-    setEventos(eventosMusica);
+    const fetchEventos = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          Alert.alert('Error', 'No hay un token disponible.');
+          return;
+        }
+  
+        // Recordad cambiar la ip
+        const response = await fetch('http://192.168.0.31:8080/api/v1/evento/categoria/16', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error HTTP! Status: ${response.status}`);
+        }
+  
+        // Almacenar los datos
+        const data = await response.json();
+        console.log('Eventos obtenidos:', data); // 👉 Verifica en consola qué devuelve la API
+
+        //Para almacenar los datos como contenido
+        if (Array.isArray(data.content)) {
+          setEventos(data.content); // 👉 Solo almacenamos los eventos
+        } else {
+          setEventos([]); // Evita errores si no es un array
+        }
+      } catch (error) {
+        console.error('Error obteniendo eventos:', error);
+        setEventos([]); // Evita el error si la API falla
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchEventos();
   }, []);
 
   const openMap = (url) => {
@@ -72,10 +111,13 @@ export function TurismoScreen() {
 
       <ScrollView>
         <View style={styles.eventList}>
-          {eventos.map((evento) => (
+          {eventos.length === 0 ? (
+        <Text style={{ textAlign: 'center', color: '#fff'}}>No hay eventos disponibles</Text>
+      ) : (
+        eventos.map((evento) => (
             <View key={evento.eventoId} style={styles.eventCard}>
               <Image
-                source={require('../../../assets/imagen-evento.png')}
+                source={{ uri: evento.imagen }}
                 style={styles.eventImage}
               />
               <Text style={styles.eventTitle}>{evento.nombre}</Text>
@@ -90,7 +132,7 @@ export function TurismoScreen() {
                 <Text>{evento.ciudad}</Text>
               </TouchableOpacity>
             </View>
-          ))}
+          )))}
         </View>
       </ScrollView>
 
@@ -227,8 +269,9 @@ const styles = StyleSheet.create({
 
   eventImage: {
     width: '100%',
-    borderRadius: 15,
-    marginBottom: 10,
+    height: 200,
+    borderRadius: 10,
+    resizeMode: 'cover', 
   },
 
   eventTitle: {
