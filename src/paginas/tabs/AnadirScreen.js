@@ -253,7 +253,7 @@ export function AnadirScreen() {
             <Picker.Item label="Vida Nocturna" value="vida nocturna" />
             <Picker.Item label="Turismo" value="turismo" />
             <Picker.Item label="Música" value="musica" />
-            <Picker.Item label="Teatro y Espectáculos" value="teatro" />
+            <Picker.Item label="Teatro y Espectáculos" value="teatro y espectaculos" />
           </Picker>
         </View>
 

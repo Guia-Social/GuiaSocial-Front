@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import debounce from 'lodash.debounce';
 import MapView, { Marker } from 'react-native-maps';  // Importamos MapView de react-native-maps
 
 export function EventoScreen({ route, navigation }) {
@@ -9,6 +10,71 @@ export function EventoScreen({ route, navigation }) {
   const openMap = (url) => {
     Linking.openURL(url).catch((err) => console.error('No se pudo abrir la ubicación', err));
   };
+  const [ubicacion, setUbicacion] = useState({ latitude: 37.3886, longitude: -5.9823 });
+  const [region, setRegion] = useState({
+      latitude: 37.3886,
+      longitude: -5.9823,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
+    const [direccion, setDireccion] = useState('');
+    const [error, setError] = useState('');
+
+    // API de google maps
+      const API_KEY = 'a169ac268a904bb694f11b32f20dbc55';
+    
+      const obtenerUbicacion = async (direccion) => {
+        if (direccion.trim() === '') {
+          setError('');
+          setUbicacion({ latitude: 37.3886, longitude: -5.9823 });
+          setRegion({
+            latitude: 37.3886,
+            longitude: -5.9823,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          });
+          return;
+        }
+    
+        try {
+          const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(direccion)}&key=${API_KEY}`);
+          const data = await response.json();
+    
+          if (data.results && data.results.length > 0) {
+            const { lat, lng } = data.results[0].geometry;
+            setUbicacion({ latitude: lat, longitude: lng });
+            setRegion({
+              latitude: lat,
+              longitude: lng,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            });
+            setError('');
+          } else {
+            setError('Dirección no encontrada');
+          }
+        } catch (err) {
+          setError('Error al buscar la dirección');
+          console.error(err);
+        }
+      };
+    
+      const obtenerUbicacionDebounced = debounce(obtenerUbicacion, 1000);
+    
+      useEffect(() => {
+        if (direccion.trim()) {
+          obtenerUbicacionDebounced(direccion);
+        } else {
+          setUbicacion({ latitude: 37.3886, longitude: -5.9823 });
+          setRegion({
+            latitude: 37.3886,
+            longitude: -5.9823,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          });
+          setError('');
+        }
+      }, [direccion]);
 
   return (
     <View style={styles.container}>
@@ -22,33 +88,29 @@ export function EventoScreen({ route, navigation }) {
 
       {/* Contenido del evento */}
       <ScrollView contentContainerStyle={styles.scrollView}>
+
         <Image source={{ uri: evento.imagen }} style={styles.eventImage} />
 
         <View style={styles.eventDetails}>
           <Text style={styles.eventSubtitle}>{evento.nombre}</Text>
-          <Text style={styles.eventSubtitle}>{evento.tipo_de_evento}</Text>
-          <Text style={styles.eventCity}>{evento.ciudad}</Text>
+          <Text style={styles.eventSubtitle}>{evento.tipoEvento}</Text>
+          <Text style={styles.eventCity}>{evento.ubicacion}</Text>
         </View>
 
         <Text style={styles.eventDescription}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Taciti non tempor enim cubilia
-          netus velit dictum felis nisi. Lobortis facilisis id bibendum felis nisi.
+        {evento.descripcion}
         </Text>
 
         {/* Mapa de Google */}
         <View style={styles.mapContainer}>
           {/* Aquí se agrega el mapa de Google con react-native-maps */}
           <MapView
-            style={styles.mapView}
-            initialRegion={{
-              latitude: evento.latitud,  // Asume que 'latitud' y 'longitud' son parte del evento
-              longitude: evento.longitud,
-              latitudeDelta: 0.0922, // Ajusta el zoom inicial
-              longitudeDelta: 0.0421, // Ajusta el zoom inicial
-            }}
-          >
-            <Marker coordinate={{ latitude: evento.latitud, longitude: evento.longitud }} />
-          </MapView>
+          style={styles.map}
+          region={region}
+          onPress={(e) => setUbicacion(e.nativeEvent.coordinate)}
+        >
+          <Marker coordinate={ubicacion} />
+        </MapView>
         </View>
       </ScrollView>
     </View>
