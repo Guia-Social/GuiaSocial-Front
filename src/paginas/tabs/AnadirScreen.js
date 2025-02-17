@@ -343,16 +343,15 @@ export function AnadirScreen() {
             )}
           </TouchableOpacity>
 
-
-          <View style={styles.pickerContainer}>
+        </View>
+        
+        <View style={styles.pickerContainer}>
           <Picker selectedValue={tipoEvento} onValueChange={(itemValue) => setTipoEvento(itemValue)} style={styles.picker}>
             <Picker.Item label="Tipo de evento" value="" />
             <Picker.Item label="Amigos" value="amigos" />
             <Picker.Item label="VIP" value="vip" />
             <Picker.Item label="Ayuntamiento" value="ayuntamiento" />
           </Picker>
-        </View>
-
         </View>
 
         {/* Botón para crear evento */}
