@@ -179,7 +179,7 @@ export function AnadirScreen() {
         ubicacion: direccion,
         ciudadNombre: ciudad,
         imagen: imagen,
-        usuarioNombre: "Enrique" //Provisional
+        usuarioNombre: "admin" //Provisional
       };
   
       const response = await fetch('http://192.168.107.73:8080/api/v1/evento/create', {
