@@ -36,7 +36,7 @@ export function HomeScreen() {
         }
   
         // Recordad cambiar la ip
-        const response = await fetch('http://192.168.107.73:8080/api/v1/evento/all', {
+        const response = await fetch('http://192.168.0.31:8080/api/v1/evento/all', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

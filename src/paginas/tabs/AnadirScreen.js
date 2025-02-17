@@ -185,7 +185,7 @@ export function AnadirScreen() {
         usuarioNombre: "admin" //Provisional
       };
   
-      const response = await fetch('http://192.168.107.73:8080/api/v1/evento/create', {
+      const response = await fetch('http://192.168.0.31:8080/api/v1/evento/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -254,7 +254,7 @@ export function AnadirScreen() {
           <Picker selectedValue={categoria} onValueChange={(itemValue) => setCategoria(itemValue)} style={styles.picker}>
             <Picker.Item label="Categoría del evento" value="" />
             <Picker.Item label="Gastronomía" value="gastronomia" />
-            <Picker.Item label="Vida Nocturna" value="vida_nocturna" />
+            <Picker.Item label="Vida Nocturna" value="vida nocturna" />
             <Picker.Item label="Turismo" value="turismo" />
             <Picker.Item label="Música" value="musica" />
             <Picker.Item label="Teatro y Espectáculos" value="teatro" />
@@ -347,16 +347,15 @@ export function AnadirScreen() {
             )}
           </TouchableOpacity>
 
-
-          <View style={styles.pickerContainer}>
+        </View>
+        
+        <View style={styles.pickerContainer}>
           <Picker selectedValue={tipoEvento} onValueChange={(itemValue) => setTipoEvento(itemValue)} style={styles.picker}>
             <Picker.Item label="Tipo de evento" value="" />
             <Picker.Item label="Amigos" value="amigos" />
             <Picker.Item label="VIP" value="vip" />
             <Picker.Item label="Ayuntamiento" value="ayuntamiento" />
           </Picker>
-        </View>
-
         </View>
 
         {/* Botón para crear evento */}
