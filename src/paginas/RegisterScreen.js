@@ -22,7 +22,7 @@ export function RegisterScreen() {
     };
 
     try {//Recordar cambiar la ip por la tuya
-      const response = await fetch("http://192.168.0.31:8080/api/v1/auth/register", {
+      const response = await fetch("http://192.168.107.73:8080/api/v1/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
