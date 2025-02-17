@@ -11,7 +11,6 @@ import { SearchNearbyLocationScreen } from './src/paginas/tabs/SearchNearbyLocat
 import { BuscarScreen } from './src/paginas/tabs/BuscarScreen';
 import { VidaNocturnaScreen } from './src/paginas/tabs/VidaNocturnaScreen';
 import { EventoScreen } from './src/paginas/tabs/EventoScreen';
-import { CalendarScreen, GastronomiaScreen, HomeScreen, OpcionesScreen, ProfileScreen, SearchNearbyLocation, BuscarScreen,  VidaNocturnaScreen } from './src/paginas/tabs/';
 import { TurismoScreen } from './src/paginas/tabs/TurismoScreen';
 import { MusicaScreen } from './src/paginas/tabs/MusicaScreen';
 import { TeatroYEspectaculoScreen } from './src/paginas/tabs/TeatroYEspectaculoScreen';

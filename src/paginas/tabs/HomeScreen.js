@@ -4,29 +4,17 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
-import EventoMock from '../../mocks/EventoMock.json';
-import UserMock from '../../mocks/UserMock.json';
-
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function HomeScreen() {
   const navigation = useNavigation();
-  const [eventos, setEventos] = useState([]);
-  const [usuarioLogueado, setUsuarioLogueado] = useState(null);
 
-  // useEffect(() => {
-  //   // Asignamos los datos del JSON a la constante eventos
-  //   setEventos(EventoMock);
-  // }, []);
+  const [eventos, setEventos] = useState([]);
+
+  
 
   useEffect(() => {
-<<<<<<< HEAD
-    // Asignamos los datos del JSON a la constante eventos
-    setEventos(EventoMock);
-    setUsuarioLogueado(UserMock[0]); 
-
-=======
     const fetchEventos = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
@@ -36,7 +24,7 @@ export function HomeScreen() {
         }
   
         // Recordad cambiar la ip
-        const response = await fetch('http://192.168.107.73:8080/api/v1/evento/all', {
+        const response = await fetch('http://192.168.0.27:8080/api/v1/evento/all', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -74,7 +62,6 @@ export function HomeScreen() {
     };
   
     fetchEventos();
->>>>>>> Kike
   }, []);
 
   const openMap = (url) => {
@@ -106,13 +93,8 @@ export function HomeScreen() {
           </TouchableOpacity>
         </LinearGradient>
 
-        {/* Imagen de usuario si hay sesión iniciada, sino mostrar icono */}
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
-          {usuarioLogueado ? (
-            <Image source={{ uri: usuarioLogueado.fotoDePerfil }} style={styles.profileImage} />
-          ) : (
-            <Ionicons name="person-circle" size={50} color="#fff" />
-          )}
+          <Ionicons name="person-circle" size={50} color="#fff" />
         </TouchableOpacity>
       </View>
 
@@ -378,7 +360,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   
-
   iconLocationImage: {
     width: 24,
     height: 24,
@@ -392,27 +373,6 @@ const styles = StyleSheet.create({
     padding: 8, 
   },
 
-  iconArrowUpImageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 8, 
-  },
-
-  iconArrowUpImage: {
-    width: 24, 
-    height: 18,
-    resizeMode: 'contain', 
-    marginLeft: 12, 
-  },
-  profileButton: {
-    borderRadius: 50,
-    overflow: 'hidden',
-  },
-  profileImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
   iconArrowUpImage: {
     width: 24, 
     height: 18,

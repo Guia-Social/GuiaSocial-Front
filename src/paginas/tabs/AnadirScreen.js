@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, ScrollView, Alert, Keyboard } from 'react-native';
-import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
@@ -10,7 +9,6 @@ import { useNavigation } from '@react-navigation/native';
 import debounce from 'lodash.debounce';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location'; // Usamos expo-location para permisos y ubicación
-
 
 export function AnadirScreen() {
   const [nombre, setNombre] = useState('');
@@ -121,9 +119,8 @@ export function AnadirScreen() {
   };
 
   const tomarFoto = async () => {
-
     await obtenerPermisoCamara(); // Solicita permiso antes de abrir la cámara
- 
+    
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
@@ -185,7 +182,7 @@ export function AnadirScreen() {
         usuarioNombre: "admin" //Provisional
       };
   
-      const response = await fetch('http://192.168.107.73:8080/api/v1/evento/create', {
+      const response = await fetch('http://192.168.0.27:8080/api/v1/evento/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -246,8 +243,6 @@ export function AnadirScreen() {
           numberOfLines={4}
           textAlignVertical="top"
           onSubmitEditing={() => Keyboard.dismiss()}
-          blurOnSubmit={true}
-
         />
 
         <View style={styles.pickerContainer}>
@@ -346,18 +341,16 @@ export function AnadirScreen() {
               />
             )}
           </TouchableOpacity>
-
-
-          <View style={styles.pickerContainer}>
-          <Picker selectedValue={tipoEvento} onValueChange={(itemValue) => setTipoEvento(itemValue)} style={styles.picker}>
-            <Picker.Item label="Tipo de evento" value="" />
-            <Picker.Item label="Amigos" value="amigos" />
-            <Picker.Item label="VIP" value="vip" />
-            <Picker.Item label="Ayuntamiento" value="ayuntamiento" />
-          </Picker>
         </View>
 
-        </View>
+        <View style={styles.pickerContainer}>
+            <Picker selectedValue={tipoEvento} onValueChange={(itemValue) => setTipoEvento(itemValue)} style={styles.picker}>
+              <Picker.Item label="Tipo de evento" value="" />
+              <Picker.Item label="Amigos" value="amigos" />
+              <Picker.Item label="VIP" value="vip" />
+              <Picker.Item label="Ayuntamiento" value="ayuntamiento" />
+            </Picker>
+          </View>
 
         {/* Botón para crear evento */}
         <TouchableOpacity onPress={crearEvento} style={styles.buttonEvento}>
@@ -463,7 +456,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
+    marginBottom: 10,
+    },
   image: {
     width: '100%',
     height: 200,
