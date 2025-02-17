@@ -34,33 +34,29 @@ export function EventosDelDiaScreen() {
     Linking.openURL(url).catch(err => console.error("No se pudo abrir la ubicación", err));
   };
 
-  const goHome = () => {
-    navigation.navigate('Home');
-  };
+  
 
   return (
     <View style={styles.container}>
       {/* Cabecera */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.homeButton} onPress={goHome}>
-          <Ionicons name="home" size={30} color="#fff" /> {/* Icono de Ionicons */}
-        </TouchableOpacity>
+        <View style={styles.headerTitle}>
+          <LinearGradient
+            colors={['#22c55e', '#9333ea']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.gradientBorderHeader}
+          >
+            <TouchableOpacity style={styles.diaButton}>
+              <Text style={styles.dia}>Eventos del día {date}</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </View>
 
-        <LinearGradient
-          colors={['#22c55e', '#9333ea']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.gradientBorderHeader}
-        >
-          <TouchableOpacity style={styles.filterFoodButton}>
-            <Text style={styles.filterFood}>Eventos del día: {date}</Text>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="close" size={50} color="white" style={styles.closeButton} />
           </TouchableOpacity>
-        </LinearGradient>
       </View>
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.eventCategories}>
-        {/* Agregar botones de categorías si lo deseas */}
-      </ScrollView>
 
       <ScrollView>
         <View style={styles.eventList}>
@@ -68,7 +64,7 @@ export function EventosDelDiaScreen() {
             eventos.map((evento) => (
               <View key={evento.eventoId} style={styles.eventCard}>
                 <Image
-                  source={{ uri: evento.imagen }} // Asegúrate de tener la imagen correcta
+                  source={{ uri: evento.imagen }} 
                   style={styles.eventImage}
                 />
                 <Text style={styles.eventTitle}>{evento.nombre}</Text>
@@ -90,32 +86,7 @@ export function EventosDelDiaScreen() {
         </View>
       </ScrollView>
 
-      {/* Botón localizaciones cercanas */}
-      <View style={styles.buttonLocation}>
-        <LinearGradient
-          colors={['#22c55e', '#9333ea']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.gradientBorder}
-        >
-          <TouchableOpacity style={styles.backgroundContainer} onPress={() => navigation.navigate('SearchNearbyLocation')}>
-            <Image
-              source={require('../../../assets/direccion-vector.png')}
-              style={styles.iconLocationImage}
-            />
-            <View style={styles.containerTextButton}>
-              <Text style={styles.nearEvents}>Eventos cerca de</Text>
-              <Text style={styles.nearEventsLocation}>Sevilla - San Bernardo</Text>
-            </View>
-            <View style={styles.iconArrowUpImageContainer}>
-              <Image
-                source={require('../../../assets/flecha.png')}
-                style={styles.iconArrowUpImage}
-              />
-            </View>
-          </TouchableOpacity>
-        </LinearGradient>
-      </View>
+      
     </View>
   );
 }
@@ -126,7 +97,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#23272A',
   },
 
-  /* Cabecera */
   header: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -135,13 +105,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
     backgroundColor: '#1F1F1F',
+    height: 150,
   },
-
-  homeButton: {
-    marginRight: 20,
-    padding: 10,
+  headerTitle: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 20,
   },
-
   gradientBorderHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -152,7 +123,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
 
-  filterFoodButton: {
+  diaButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -162,11 +133,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
 
-  filterFood: {
+  dia: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
     marginRight: 8,
+  },
+
+  closeButton: {
+    position: 'relative',
+    left: 40,
+    top: 10,
   },
 
   eventCategories: {

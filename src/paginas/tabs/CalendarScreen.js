@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     height: 150,
+    marginBottom: 20,
   },
   headerTitle: {
     color: '#000',
