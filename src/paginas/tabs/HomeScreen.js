@@ -3,8 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking } 
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-
-
+import MaskedView from '@react-native-masked-view/masked-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function HomeScreen() {
@@ -81,7 +80,7 @@ export function HomeScreen() {
           <Ionicons name="menu" size={40} color="#fff" />
         </TouchableOpacity>
 
-        <LinearGradient
+        {/*<LinearGradient
           colors={['#22c55e', '#9333ea']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -91,7 +90,20 @@ export function HomeScreen() {
             <Text style={styles.calendarTitle}>CALENDARIO</Text>
             <Ionicons name="chevron-down" size={24} color="#fff" />
           </TouchableOpacity>
-        </LinearGradient>
+        </LinearGradient>> */}
+
+
+          
+         {/* Texto con degradado */}
+         <MaskedView maskElement={<Text style={styles.title}>EL GIRALDILLO</Text>}>
+          <LinearGradient
+            colors={['#22c55e', '#9333ea']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <Text style={[styles.title, { opacity: 0 }]}>EL GIRALDILLO</Text>
+          </LinearGradient>
+        </MaskedView>
 
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
           <Ionicons name="person-circle" size={50} color="#fff" />
@@ -196,6 +208,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: 20,
     backgroundColor: '#23272A',
+  },
+  title: {
+    fontSize: 30,
   },
  
   gradientBorder: {

@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     width: '80%',
     borderRadius: 5,
     alignItems: 'center',
-    marginTop: 250,
+    marginTop: '70%',
   },
   
   logoutButton: {
