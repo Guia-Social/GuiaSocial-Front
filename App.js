@@ -41,7 +41,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Registro" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
@@ -58,6 +58,8 @@ export default function App() {
         <Stack.Screen name="EventosDelDia" component={EventosDelDiaScreen} />
         <Stack.Screen name="EventoScreen" component={EventoScreen} />
         <Stack.Screen name="Añadir" component={AnadirScreen} />
+        <Stack.Screen name="Anadir" component={AnadirScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

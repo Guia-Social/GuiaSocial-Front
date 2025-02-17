@@ -4,16 +4,64 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 
-import EventoMock from '../../mocks/EventoMock.json';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function HomeScreen() {
   const navigation = useNavigation();
 
   const [eventos, setEventos] = useState([]);
 
+  
+
   useEffect(() => {
-    // Asignamos los datos del JSON a la constante eventos
-    setEventos(EventoMock);
+    const fetchEventos = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          Alert.alert('Error', 'No hay un token disponible.');
+          return;
+        }
+  
+        // Recordad cambiar la ip
+        const response = await fetch('http://192.168.0.27:8080/api/v1/evento/all', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error HTTP! Status: ${response.status}`);
+        }
+  
+        // Almacenar los datos
+        const data = await response.json();
+        console.log('Eventos obtenidos:', data); // 👉 Verifica en consola qué devuelve la API
+  
+        //Antigua forma para almacenar el contenido (no funciona)
+        // if (Array.isArray(data)) {
+        //   setEventos(data);
+        // } else {
+        //   setEventos([]); // En caso de que no sea un array, evita errores
+        // }
+
+        //Para almacenar los datos como contenido
+        if (Array.isArray(data.content)) {
+          setEventos(data.content); // 👉 Solo almacenamos los eventos
+        } else {
+          setEventos([]); // Evita errores si no es un array
+        }
+      } catch (error) {
+        console.error('Error obteniendo eventos:', error);
+        setEventos([]); // Evita el error si la API falla
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchEventos();
   }, []);
 
   const openMap = (url) => {
@@ -83,8 +131,8 @@ export function HomeScreen() {
               />
               <Text style={styles.eventTitle}>{evento.nombre}</Text>
               <Text style={styles.eventDescription}>{evento.descripcion}</Text>
-              <Text style={styles.eventType}>{evento.tipo_de_evento}</Text>
-              <Text style={styles.categoryEventName}>{evento.nombre_categoria}</Text>
+              <Text style={styles.eventType}>{evento.tipoEvento}</Text>
+              <Text style={styles.categoryEventName}>{evento.categoriaNombre}</Text>
               <Text style={styles.eventDate}>Del {evento.fechaInicio} Al {evento.fechaFin}</Text>
 
               {/* Icono de mapa para abrir la ubicación en Google Maps */}

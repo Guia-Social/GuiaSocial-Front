@@ -1,52 +1,66 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import usersData from '../mocks/UserMock.json'; // Asegúrate de tener la ruta correcta al archivo
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
 
 export function LoginScreen() {
   const navigation = useNavigation();
-
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // Para mostrar errores si las credenciales son incorrectas
+  const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    // Buscar al usuario que coincida con el correo y la contraseña
-    const user = usersData.find(
-      (user) => user.email === email && user.password === password
-    );
+  const GradientText = ({ text, style }) => (
+    <MaskedView maskElement={<Text style={[style, { backgroundColor: 'transparent' }]}>{text}</Text>}>
+      <LinearGradient colors={['#22c55e', '#9333ea']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+        <Text style={[style, { opacity: 0 }]}>{text}</Text>
+      </LinearGradient>
+    </MaskedView>
+  );
 
-    if (user) {
-      // Si el usuario existe y las credenciales son correctas, navega a Home
+  const handleLogin = async () => {
+    if (!name || !password) {
+      setError('Por favor, completa todos los campos.');
+      return;
+    }
+
+    try {
+      const response = await fetch("http://192.168.0.27:8080/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, password }),
+      });
+
+      if (!response.ok) {
+        setError("Nombre de usuario o contraseña incorrectos");
+        return;
+      }
+
+      const data = await response.json();
+      await AsyncStorage.setItem("token", data.token);
       navigation.navigate('Home');
-    } else {
-      // Si las credenciales son incorrectas, muestra un error
-      setError('Correo o contraseña incorrectos');
+    } catch (error) {
+      setError("Error al conectar con el servidor");
     }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.logoContainer}>
-        <Image
-          source={require('../../assets/icono-perfil.png')}
-          style={styles.logo}
-        />
+        <Image source={require('../../assets/logoGiraldillo.png')} style={styles.logo} />
       </View>
 
       <Text style={styles.title}>GUÍA SOCIAL</Text>
 
-      {/* Campo para el correo electronico */}
       <TextInput
         style={styles.input}
-        placeholder="Introduzca su correo"
+        placeholder="Introduzca su nick"
         placeholderTextColor="#ccc"
-        keyboardType='email-address'
-        value={email}
-        onChangeText={setEmail}
+        value={name}
+        onChangeText={setName}
       />
 
-      {/* Campo para la contraseña */}
       <TextInput
         style={styles.input}
         placeholder="Introduzca su contraseña"
@@ -56,22 +70,25 @@ export function LoginScreen() {
         onChangeText={setPassword}
       />
 
-      {/* Mostrar el error si las credenciales son incorrectas */}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-      <TouchableOpacity style={styles.forgotPasswordButton} onPress={() => navigation.navigate('ForgotPassword')}>
-        <Text style={styles.forgotPasswordText}>¿Olvidaste la contraseña?</Text>
+
+
+      {/* Botón Log in con fondo degradado */}
+      <TouchableOpacity onPress={handleLogin}>
+        <LinearGradient colors={['#22c55e', '#9333ea']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.loginButton}>
+          <Text style={styles.loginButtonText}>Log in</Text>
+        </LinearGradient>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Log in</Text>
-      </TouchableOpacity>
+      {/* Crear cuenta con texto degradado */}
+      <View style={styles.registerContainer}>
+        <Text style={styles.registerText}>¿No tienes cuenta?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Registro')}>
+          <GradientText text=" Crear cuenta" style={styles.registerLink} />
+        </TouchableOpacity>
+      </View>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.registerText}>¿No tienes cuenta?
-            <Text style={styles.registerLink} onPress={() => navigation.navigate('Registro')}>Crear cuenta</Text>
-        </Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -79,7 +96,7 @@ export function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: '#23272A',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
@@ -101,24 +118,17 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    backgroundColor: '#1e1e1e',
+    backgroundColor: '#323639',
     color: '#fff',
     padding: 10,
     marginVertical: 10,
     borderRadius: 5,
   },
-  forgotPasswordButton: {
-    marginTop: 10,
-  },
-  forgotPasswordText: {
-    color: '#70c100',
-    fontSize: 14,
-    textAlign: 'center',
-  },
+
   loginButton: {
     width: '100%',
-    backgroundColor: '#70c100',
-    padding: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 150,
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
@@ -128,16 +138,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  registerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+  },
   registerText: {
     color: '#b8b8b8',
     fontSize: 14,
-    marginTop: 20,
-    textAlign: 'center',
   },
   registerLink: {
-    color: '#70c100',
     fontWeight: 'bold',
+    fontSize: 14,
   },
+  
   errorText: {
     color: 'red',
     fontSize: 14,
@@ -145,3 +159,4 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+

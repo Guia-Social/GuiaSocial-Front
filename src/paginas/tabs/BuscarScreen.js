@@ -45,17 +45,12 @@ export function BuscarScreen() {
   return (
     <View style={styles.container}>
       {/* Cabecera */}
-      <View style={styles.header}>
-        {/* Botón de inicio */}
-        <TouchableOpacity style={styles.homeButton} onPress={goHome}>
-          <Ionicons name="home" size={30} color="#fff" />
-        </TouchableOpacity>
-
-        {/* Botón BUSCAR */}
-        <TouchableOpacity style={styles.filterFoodButton}>
-          <Text style={styles.filterFood}>BUSCAR</Text>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.headerContainer}>
+              <Text style={styles.headerTitle}>Buscar evento</Text>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Ionicons name="close" size={50} color="black" style={styles.closeButton} />
+              </TouchableOpacity>
+            </View>
 
       {/* Contenido del buscador */}
       <View style={styles.searchBox}>
@@ -100,19 +95,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#23272A',
   },
 
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    backgroundColor: '#1F1F1F',
+  headerContainer: {
+    flexDirection: 'row',  
+    justifyContent: 'space-between',  
+    alignItems: 'center',  
+    backgroundColor: '#D9D9D9',  
+    paddingHorizontal: 20,  
+    paddingVertical: 20,  
+    height: 150,  
   },
-
-  homeButton: {
-    marginRight: 20,
-    padding: 10,
+  headerTitle: {
+    color: '#000',  
+    fontSize: 24,  
+    fontWeight: 'bold',  
+    marginTop: 80,
+  },
+  closeButton: {
+    position: 'absolute',  
+    left: -35,
+    top: 15,
   },
 
   filterFoodButton: {
