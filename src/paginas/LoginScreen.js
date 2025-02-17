@@ -21,7 +21,11 @@ export function LoginScreen() {
     };
 
     try {
+<<<<<<< HEAD
       const response = await fetch("http://192.168.0.16:8080/api/v1/auth/login", {
+=======
+      const response = await fetch("http://192.168.107.73:8080/api/v1/auth/login", {
+>>>>>>> origin/develop
         method: "POST",
         headers: {
           "Content-Type": "application/json",

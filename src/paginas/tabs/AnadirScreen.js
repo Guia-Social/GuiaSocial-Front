@@ -129,6 +129,72 @@ export function AnadirScreen() {
     );
   };
 
+<<<<<<< HEAD
+=======
+  const crearEvento = async () => {
+    if (!nombre || !descripcion || !categoria || !fechaInicio || !fechaFin || !direccion || !imagen || !tipoEvento || !ciudad) {
+      setError('Por favor, completa todos los campos.');
+      return;
+    }
+  
+    setError('');
+  
+    try {
+      const token = await AsyncStorage.getItem('token'); // Obtener el token
+  
+      if (!token) {
+        Alert.alert('Error', 'No se encontró el token de autenticación. Inicia sesión nuevamente.');
+        return;
+      }
+  
+      const eventoData = {
+        nombre: nombre,
+        descripcion: descripcion,
+        categoriaNombre: categoria,
+        tipoEvento: tipoEvento,
+        fechaInicio: fechaInicio.toISOString(),
+        fechaFin: fechaFin.toISOString(),
+        ubicacion: direccion,
+        ciudadNombre: ciudad,
+        imagen: imagen,
+        usuarioNombre: "admin" //Provisional
+      };
+  
+      const response = await fetch('http://192.168.107.73:8080/api/v1/evento/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Agregar el token en la cabecera
+        },
+        body: JSON.stringify(eventoData)
+      });
+
+      // const data = await response.json();
+  
+      // ⚠️ Verifica si la respuesta tiene contenido antes de parsearla
+      const responseText = await response.text(); 
+      console.log('Respuesta del servidor:', responseText);
+
+      if (!responseText) {
+        throw new Error('El servidor devolvió una respuesta vacía.');
+      }
+
+      const data = JSON.parse(responseText); // Solo intentar parsear si hay contenido
+  
+      if (response.ok) {
+        Alert.alert('Éxito', 'Evento creado correctamente.');
+        navigation.navigate('Home');
+      } else {
+        setError(data.message || 'Error al crear el evento');
+      }
+    } catch (error) {
+      console.error('Error al crear evento:', error);
+      setError('Error al conectar con el servidor.');
+    }
+  };
+  
+
+>>>>>>> origin/develop
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
