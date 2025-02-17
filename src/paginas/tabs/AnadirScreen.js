@@ -182,7 +182,7 @@ export function AnadirScreen() {
         usuarioNombre: "Enrique" //Provisional
       };
   
-      const response = await fetch('http://192.168.0.31:8080/api/v1/evento/create', {
+      const response = await fetch('http://192.168.107.73:8080/api/v1/evento/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
