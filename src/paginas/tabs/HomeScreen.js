@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-
-
+import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function HomeScreen() {
   const navigation = useNavigation();
 
   const [eventos, setEventos] = useState([]);
-
+  const [location, setLocation] = useState(null);  // Guardar ubicación del usuario
+  const [errorMsg, setErrorMsg] = useState(null);  // Mensaje de error en caso de problemas
+  const [city, setCity] = useState("Cargando...");  // Ciudad actual
   
 
   useEffect(() => {
+    // Función para obtener los eventos
     const fetchEventos = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
@@ -40,14 +42,7 @@ export function HomeScreen() {
         const data = await response.json();
         console.log('Eventos obtenidos:', data); // 👉 Verifica en consola qué devuelve la API
   
-        //Antigua forma para almacenar el contenido (no funciona)
-        // if (Array.isArray(data)) {
-        //   setEventos(data);
-        // } else {
-        //   setEventos([]); // En caso de que no sea un array, evita errores
-        // }
-
-        //Para almacenar los datos como contenido
+        // Para almacenar los datos como contenido
         if (Array.isArray(data.content)) {
           setEventos(data.content); // 👉 Solo almacenamos los eventos
         } else {
@@ -56,23 +51,52 @@ export function HomeScreen() {
       } catch (error) {
         console.error('Error obteniendo eventos:', error);
         setEventos([]); // Evita el error si la API falla
-      } finally {
-        setLoading(false);
       }
     };
-  
+
     fetchEventos();
-  }, []);
+
+    // Función para obtener la ubicación
+    const getLocation = async () => {
+      try {
+        // Solicitar permisos de ubicación en el primer plano
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permiso de ubicación denegado');
+          return;
+        }
+
+        let locationData = await Location.getCurrentPositionAsync({}); // Obtener ubicación
+        setLocation(locationData.coords); // Guardar las coordenadas
+
+        // Obtener la ciudad a partir de las coordenadas
+        const geocode = await Location.reverseGeocodeAsync({
+          latitude: locationData.coords.latitude,
+          longitude: locationData.coords.longitude,
+        });
+
+        if (geocode.length > 0) {
+          setCity(geocode[0].city || "Ubicación no disponible"); // Si encontramos la ciudad
+        }
+      } catch (error) {
+        setErrorMsg('Error al obtener la ubicación');
+        console.error(error);
+      }
+    };
+
+    // Llamar a la función para obtener la ubicación
+    getLocation();
+
+  }, []); // Solo se ejecuta al montar el componente
 
   const openMap = (url) => {
-    // Usamos Linking para abrir el enlace en Google Maps
     Linking.openURL(url).catch(err => console.error("No se pudo abrir la ubicación", err));
   };
 
   const handleEventPress = (evento) => {
-    console.log(evento); // Asegúrate de que este objeto contenga latitud y longitud
+    console.log(evento);
     navigation.navigate('EventoScreen', { evento });
-  };  
+  };
 
   return (
     <View style={styles.container}>
@@ -125,9 +149,9 @@ export function HomeScreen() {
         <TouchableOpacity style={styles.eventList}>
           {eventos.map((evento) => (
             <View key={evento.eventoId} style={styles.eventCard}>
-              <Image 
-                source={{ uri: evento.imagen }} 
-                style={styles.eventImage} 
+              <Image
+                source={{ uri: evento.imagen }}
+                style={styles.eventImage}
               />
               <Text style={styles.eventTitle}>{evento.nombre}</Text>
               <Text style={styles.eventDescription}>{evento.descripcion}</Text>
@@ -152,7 +176,6 @@ export function HomeScreen() {
 
       {/* Boton localizaciones cercanas */}
       <View style={styles.buttonLocation}>
-        {/* Degradado aplicado al borde del calendario */}
         <LinearGradient
           colors={['#22c55e', '#9333ea']}
           start={{ x: 0, y: 0 }}
@@ -164,9 +187,12 @@ export function HomeScreen() {
               source={require('../../../assets/direccion-vector.png')}
               style={styles.iconLocationImage}
             />
-            <View style={styles.containerTextButton} >
+            <View style={styles.containerTextButton}>
               <Text style={styles.nearEvents}>Eventos cerca de</Text>
-              <Text style={styles.nearEventsLocation}>Sevilla - San Bernardo</Text>
+              {/* Mostrar la ciudad obtenida */}
+              <Text style={styles.nearEventsLocation}>
+                {location ? `${city}` : 'Cargando...'}
+              </Text>
             </View>
             <View style={styles.iconArrowUpImageContainer}>
               <Image
