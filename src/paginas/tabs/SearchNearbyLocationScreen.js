@@ -1,116 +1,74 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, FlatList, ActivityIndicator } from "react-native";
-import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList, ActivityIndicator } from "react-native";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location"; 
 
 export function SearchNearbyLocationScreen() {
-  const navigation = useNavigation(); // Para navegar a la pantalla anterior
-
+  const navigation = useNavigation();
+  
   // Variables
-  const [inputText, setInputText] = useState("");
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [debounceTimeout, setDebounceTimeout] = useState(null);
   const [location, setLocation] = useState(null);
-  
+  const [city, setCity] = useState("Cargando...");  // Ciudad actual
+  const [cities, setCities] = useState([]);  // Lista de ciudades
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);  // Controlar si el dropdown está abierto
   const apiKey = "dccdbf11ee724d5b82743b0d62e62f1a";
+  const [loadingCities, setLoadingCities] = useState(true);
+
+  // Hacer fetch a las ciudades cuando la pantalla se carga
+  useEffect(() => {
+    fetchCities();
+    getLocation();  // Obtener la ubicación cuando la pantalla se carga
+  }, []);
+
+  // Función para obtener las ciudades del backend
+  const fetchCities = async () => {
+    try {
+      setLoadingCities(true); // Activar la carga
+      const response = await fetch("http://192.168.0.27:8080/api/v1/ciudad/all"); // Nueva URL
+
+      if (!response.ok) {
+        throw new Error(`Error al obtener las ciudades: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (data && Array.isArray(data)) {
+        setCities(data); 
+      } else {
+        setCities([]);
+      }
+    } catch (error) {
+      console.error("Error obteniendo las ciudades:", error);
+      setCities([]); 
+    } finally {
+      setLoadingCities(false); // Desactivar la carga
+    }
+  };
 
   // Función para obtener la ubicación del usuario
   const getLocation = async () => {
-    // Solicitamos el permiso para acceder a la ubicación
     let { status } = await Location.requestForegroundPermissionsAsync();
 
     if (status === "granted") {
-      let location = await Location.getCurrentPositionAsync({});
+      let locationData = await Location.getCurrentPositionAsync({});
+      setLocation(locationData.coords); // Guardar las coordenadas
 
-      const { latitude, longitude } = location.coords;
-      fetchNearbyEvents(latitude, longitude); 
+      // Obtener la ciudad a partir de las coordenadas
+      const geocode = await Location.reverseGeocodeAsync({
+        latitude: locationData.coords.latitude,
+        longitude: locationData.coords.longitude,
+      });
+
+      if (geocode.length > 0) {
+        setCity(geocode[0].city || "Ubicación no disponible"); // Si encontramos la ciudad
+      }
     } else {
       alert("Permiso para acceder a la ubicación denegado");
     }
   };
 
-  // Función que maneja la búsqueda de eventos con latitud y longitud
-  const fetchNearbyEvents = async (latitud, longitud) => {
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${latitud}+${longitud}&key=${apiKey}`
-      );
-      const data = await response.json();
-      console.log("Datos de la API OpenCage:", data);
-  
-      if (data.results && data.results[0]) {
-        const city = data.results[0].components.city || "Ubicación desconocida";
-        console.log("Ciudad encontrada:", city);
-  
-        try {
-          const eventsResponse = await fetch(`YOUR_BACKEND_URL/events?city=${city}`);
-          if (!eventsResponse.ok) {
-            throw new Error(`Error al obtener los eventos: ${eventsResponse.statusText}`);
-          }
-          const eventsData = await eventsResponse.json();
-          console.log("Eventos encontrados:", eventsData);
-          setEvents(eventsData.events);
-        } catch (eventError) {
-          console.error("Error al obtener eventos:", eventError);
-        }
-      } else {
-        console.error("No se encontró ciudad para las coordenadas.");
-      }
-    } catch (error) {
-      console.error("Error al obtener la ciudad:", error);
-    }
-  
-    setIsLoading(false);
-  };
-
-  // Manejador para el evento de "onSubmitEditing" que se ejecuta al presionar "Enter"
-  const handleKeyPress = (event) => {
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout); // Limpiar cualquier tiempo anterior
-    }
-
-    // Crear un nuevo timeout para evitar peticiones repetidas mientras se escribe
-    const timeout = setTimeout(() => handleSearch(inputText), 500); 
-    setDebounceTimeout(timeout);
-  };
-
-  // Función para manejar el texto del input (con debouncing)
-  const handleSearch = async (text) => {
-    setInputText(text);
-    if (text.length < 3) {
-      setEvents([]); 
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // Realizamos un fetch a la API de OpenCage para obtener la ciudad basada en las coordenadas
-      const response = await fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${text}&key=${apiKey}`
-      );
-      const data = await response.json();
-
-      if (data.results && data.results[0]) {
-        const city = data.results[0].components.city || "Ubicación desconocida";
-        const eventsResponse = await fetch(`YOUR_BACKEND_URL/events?city=${city}`);
-        const eventsData = await eventsResponse.json();
-        setEvents(eventsData.events);
-      } else {
-        console.error("No se encontró ciudad para el texto.");
-      }
-    } catch (error) {
-      console.error("Error al obtener la ciudad:", error);
-    }
-
-    setIsLoading(false);
-  };
-
-  // Función para renderizar cada evento
   const renderEvent = ({ item }) => (
     <TouchableOpacity style={styles.eventItem}>
       <Image source={{ uri: item.imagen }} style={styles.eventImage} />
@@ -121,6 +79,12 @@ export function SearchNearbyLocationScreen() {
       <Text style={styles.eventDescription}>{item.descripcion}</Text>
     </TouchableOpacity>
   );
+
+  // Función para manejar la selección de ciudad
+  const handleCitySelect = (city) => {
+    setCity(city); // Establecer la ciudad seleccionada
+    setIsDropdownOpen(false); // Cerrar el desplegable
+  };
 
   return (
     <View style={styles.container}>
@@ -139,32 +103,40 @@ export function SearchNearbyLocationScreen() {
 
       {/* Selector de ubicación */}
       <View style={styles.locationSelector}>
-        <TouchableOpacity style={styles.locationButton} onPress={getLocation}>
+        <TouchableOpacity
+          style={styles.locationButton}
+          onPress={() => setIsDropdownOpen(!isDropdownOpen)}  // Toggle para abrir/cerrar el desplegable
+        >
           <Image
             source={require("../../../assets/direccion-vector.png")}
             style={styles.iconLocationImage}
           />
-          <Text style={styles.locationText}>Mi ubicación actual</Text>
+          <Text style={styles.locationText}>{city}</Text>
         </TouchableOpacity>
 
-        <View style={styles.locationMunicipalityContainer}>
-          <View style={styles.locationTextMunicipality}>
-            <Ionicons
-              name="search"
-              size={22}
-              color="white"
-              style={styles.icon}
-            />
-            <TextInput
-              style={styles.municipalityTextInput}
-              placeholder="Municipio / Metro"
-              placeholderTextColor="#B0B0B0" 
-              value={inputText}
-              onChangeText={setInputText} 
-              onSubmitEditing={handleKeyPress} 
-            />
-          </View>
-        </View>
+        {/* Mostrar mensaje de carga si las ciudades están cargando */}
+        {loadingCities ? (
+          <Text style={styles.dropdownItemText}>Cargando ciudades...</Text>
+        ) : (
+          // Desplegable de ciudades
+          isDropdownOpen && (
+            <View style={styles.dropdownContainer}>
+              {cities.length > 0 ? (
+                cities.map((cityItem, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.dropdownItem}
+                    onPress={() => handleCitySelect(cityItem.nombre)}
+                  >
+                    <Text style={styles.dropdownItemText}>{cityItem.nombre}</Text>
+                  </TouchableOpacity>
+                ))
+              ) : (
+                <Text style={styles.dropdownItemText}>No se encontraron ciudades</Text>
+              )}
+            </View>
+          )
+        )}
 
         {/* Mostrar el listado de eventos si existen */}
         {isLoading ? (
