@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking } 
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import MaskedView from '@react-native-masked-view/masked-view';
 
 import EventoMock from '../../mocks/EventoMock.json';
 
@@ -85,7 +86,8 @@ export function HomeScreen() {
           <Ionicons name="menu" size={40} color="#fff" />
         </TouchableOpacity>
 
-        <LinearGradient
+        {/* Sistema de calendario beta, falta de tiempo */}
+        {/*<LinearGradient
           colors={['#22c55e', '#9333ea']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -95,7 +97,20 @@ export function HomeScreen() {
             <Text style={styles.calendarTitle}>CALENDARIO</Text>
             <Ionicons name="chevron-down" size={24} color="#fff" />
           </TouchableOpacity>
-        </LinearGradient>
+        </LinearGradient>> */}
+
+
+          
+         {/* Texto con degradado */}
+         <MaskedView maskElement={<Text style={styles.title}>EL GIRALDILLO</Text>}>
+          <LinearGradient
+            colors={['#22c55e', '#9333ea']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <Text style={[styles.title, { opacity: 0 }]}>EL GIRALDILLO</Text>
+          </LinearGradient>
+        </MaskedView>
 
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
           <Ionicons name="person-circle" size={50} color="#fff" />
@@ -182,6 +197,38 @@ export function HomeScreen() {
         </LinearGradient>
       </View>
     </View>
+
+// Boton para ver las ubicaciones beta no finalizado por falta de tiempo
+    // {/* Boton localizaciones cercanas */}
+    //   <View style={styles.buttonLocation}>
+    //   <LinearGradient
+    //     colors={['#22c55e', '#9333ea']}
+    //     start={{ x: 0, y: 0 }}
+    //     end={{ x: 1, y: 1 }}
+    //     style={styles.gradientBorder}
+    //   >
+    //     <TouchableOpacity style={styles.backgroundContainer} onPress={() => navigation.navigate('SearchNearbyLocation')}>
+    //       <Image
+    //         source={require('../../../assets/direccion-vector.png')}
+    //         style={styles.iconLocationImage}
+    //       />
+    //       <View style={styles.containerTextButton}>
+    //         <Text style={styles.nearEvents}>Eventos cerca de</Text>
+    //         {/* Mostrar la ciudad obtenida */}
+    //         <Text style={styles.nearEventsLocation}>
+    //           {location ? ${city} : 'Cargando...'}
+    //         </Text>
+    //       </View>
+    //       <View style={styles.iconArrowUpImageContainer}>
+    //         <Image
+    //           source={require('../../../assets/flecha.png')}
+    //           style={styles.iconArrowUpImage}
+    //         />
+    //       </View>
+    //     </TouchableOpacity>
+    //   </LinearGradient>
+    // </View>
+
   );
 }
 
@@ -281,6 +328,10 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 20,
     fontWeight: 'bold',
+  },
+
+  title:{
+    fontSize: 25,
   },
 
   eventLocation: {
