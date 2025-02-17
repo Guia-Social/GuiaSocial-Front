@@ -1,0 +1,36 @@
+[
+    {
+        "userId": 1,
+        "username": "David Cuevinas",
+        "email": "david.cuevinas@vedrunasevillasj.es",
+        "password": "password123",
+        "rolName": "Cuevinas",
+        "fechaRegistro": "2003-02-03",
+        "fotoDePerfil": "https://cdn-icons-png.flaticon.com/512/1198/1198293.png",
+        "amigos": [4]
+    
+    
+    },
+    {
+        "userId": 2,
+        "username": "Hola",
+        "email": "hola@gmail.com",
+        "password": "hola123",
+        "rolName": "Hola",
+        "fechaRegistro": "2003-02-03",
+        "fotoDePerfil": "https://cdn-icons-png.flaticon.com/512/1198/1198293.png",
+        "amigos": [1, 4]
+    
+    
+    },
+    {
+        "userId": 4,
+        "username": "Real King of Ohio",
+        "email": "don.pollo@vedrunasevillasj.es",
+        "password": "password123",
+        "rolName": "King",
+        "fechaRegistro": "2022-12-03",
+        "fotoDePerfil": "https://cdn-icons-png.flaticon.com/512/3577/3577429.png",
+        "amigos": [1]
+    }
+]

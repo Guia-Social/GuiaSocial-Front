@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "GuiaSocial",
+    "slug": "GuiaSocial",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logoGiraldillo.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/logoGiraldillo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Esta aplicación necesita acceso a tu cámara para tomar fotos."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logoGiraldillo",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/logoGiraldillo.png"
+    }
+  }
+}

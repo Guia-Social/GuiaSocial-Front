@@ -1,0 +1,17 @@
+[
+    {
+        "ciudadId": "1",
+        "nombreCiudad": "Sevilla",
+        "paisId": "1"
+    },
+    {
+        "ciudadId": "2",
+        "nombreCiudad": "Huelva",
+        "paisId": "1"
+    },
+    {
+        "ciudadId": "3",
+        "nombreCiudad": "Lisboa",
+        "paisId": "2"
+    }
+]
