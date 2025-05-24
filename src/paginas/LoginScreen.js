@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
+import CONFIG from './ip';
 
 export function LoginScreen() {
   const navigation = useNavigation();
@@ -26,7 +27,7 @@ export function LoginScreen() {
     }
 
     try {
-      const response = await fetch("http://192.168.0.31:8080/api/v1/auth/login", {
+      const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, password }),
@@ -51,7 +52,7 @@ export function LoginScreen() {
         <Image source={require('../../assets/logoGiraldillo.png')} style={styles.logo} />
       </View>
 
-      <Text style={styles.title}>GUÍA SOCIAL</Text>
+      <Text style={styles.title}>EL GIRALDILLO</Text>
 
       <TextInput
         style={styles.input}

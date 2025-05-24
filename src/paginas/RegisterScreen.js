@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';  
 import { LinearGradient } from 'expo-linear-gradient';
+import CONFIG from './ip';
 
 
 export function RegisterScreen() {
@@ -15,7 +16,7 @@ export function RegisterScreen() {
     const userData = { name: nick, password: contrasena, email: correo };
 
     try {
-      const response = await fetch("http://192.168.0.31:8080/api/v1/auth/register", {
+      const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
@@ -49,7 +50,7 @@ export function RegisterScreen() {
       <View style={styles.logoContainer}>
         <Image source={require('../../assets/logoGiraldillo.png')} style={styles.logo} />
       </View>
-      <Text style={styles.title}>GUÍA SOCIAL</Text>
+      <Text style={styles.title}>EL GIRALDILLO</Text>
 
       <TextInput style={styles.input} placeholder="Introduzca su nick" placeholderTextColor="#ccc" value={nick} onChangeText={setNick} />
       <TextInput style={styles.input} placeholder="Introduzca su correo" placeholderTextColor="#ccc" keyboardType="email-address" value={correo} onChangeText={setCorreo} />

@@ -4,20 +4,20 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import MaskedView from '@react-native-masked-view/masked-view';
+import CONFIG from '../ip';
 
-import EventoMock from '../../mocks/EventoMock.json';
+// Antiguos Mocks que se usaban antes de tener el backend listo
+// import EventoMock from '../../mocks/EventoMock.json';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const defaultProfileImage = require('../../../assets/logoGiraldillo.png');
 
 export function HomeScreen() {
   const navigation = useNavigation();
 
   const [eventos, setEventos] = useState([]);
 
-  // useEffect(() => {
-  //   // Asignamos los datos del JSON a la constante eventos
-  //   setEventos(EventoMock);
-  // }, []);
 
   useEffect(() => {
     const fetchEventos = async () => {
@@ -28,8 +28,7 @@ export function HomeScreen() {
           return;
         }
   
-        // Recordad cambiar la ip
-        const response = await fetch('http://192.168.0.31:8080/api/v1/evento/all', {
+        const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/evento/all`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -44,13 +43,6 @@ export function HomeScreen() {
         // Almacenar los datos
         const data = await response.json();
         console.log('Eventos obtenidos:', data); // 👉 Verifica en consola qué devuelve la API
-  
-        //Antigua forma para almacenar el contenido (no funciona)
-        // if (Array.isArray(data)) {
-        //   setEventos(data);
-        // } else {
-        //   setEventos([]); // En caso de que no sea un array, evita errores
-        // }
 
         //Para almacenar los datos como contenido
         if (Array.isArray(data.content)) {
@@ -69,10 +61,6 @@ export function HomeScreen() {
     fetchEventos();
   }, []);
 
-  const openMap = (url) => {
-    // Usamos Linking para abrir el enlace en Google Maps
-    Linking.openURL(url).catch(err => console.error("No se pudo abrir la ubicación", err));
-  };
 
   const handleEventPress = (evento) => {
     console.log(evento); // Asegúrate de que este objeto contenga latitud y longitud
@@ -82,12 +70,14 @@ export function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+
+        {/* Menú hamburguesa */}
         <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Opciones')}>
           <Ionicons name="menu" size={40} color="#fff" />
         </TouchableOpacity>
 
-        {/* Sistema de calendario beta, falta de tiempo */}
-        {/*<LinearGradient
+        {/* Sistema de calendario*/}
+        <LinearGradient
           colors={['#22c55e', '#9333ea']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -97,26 +87,19 @@ export function HomeScreen() {
             <Text style={styles.calendarTitle}>CALENDARIO</Text>
             <Ionicons name="chevron-down" size={24} color="#fff" />
           </TouchableOpacity>
-        </LinearGradient>> */}
+        </LinearGradient>
 
-
-          
-         {/* Texto con degradado */}
-         <MaskedView maskElement={<Text style={styles.title}>EL GIRALDILLO</Text>}>
-          <LinearGradient
-            colors={['#22c55e', '#9333ea']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          >
-            <Text style={[styles.title, { opacity: 0 }]}>EL GIRALDILLO</Text>
-          </LinearGradient>
-        </MaskedView>
-
+        {/* Botón de Perfil */}
         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Perfil')}>
-          <Ionicons name="person-circle" size={50} color="#fff" />
+          <Image
+            source={defaultProfileImage}
+            style={styles.profileImage}
+          />
+
         </TouchableOpacity>
       </View>
 
+      {/* Barra de categorías */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.eventCategories}>
         {/* Agregar los botones de categorías de eventos */}
         <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Gastronomia')}>
@@ -134,6 +117,7 @@ export function HomeScreen() {
         <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('teatroYEspectaculo')}>
           <Text style={styles.eventCategoryButtonText}>TEATRO Y ESPECTÁCULOS</Text>
         </TouchableOpacity>
+        {/* El boton de buscar evento por nombre */}
         <TouchableOpacity style={styles.eventCategoryButton} onPress={() => navigation.navigate('Buscar')}>
           <Text style={styles.eventCategoryButtonText}>BUSCAR</Text>
         </TouchableOpacity>
@@ -141,32 +125,35 @@ export function HomeScreen() {
 
       {/* Lista de eventos */}
       <ScrollView>
-        <TouchableOpacity style={styles.eventList}>
-          {eventos.map((evento) => (
-            <View key={evento.eventoId} style={styles.eventCard}>
-              <Image 
-                source={{ uri: evento.imagen }} 
-                style={styles.eventImage} 
+        <View style={styles.eventList}>
+        {eventos.map((evento) => (
+          <TouchableOpacity
+            key={evento.eventoId}
+            style={styles.eventCard}
+            onPress={() => handleEventPress(evento)}
+            activeOpacity={0.8}
+          >
+            <Image 
+              source={{ uri: evento.imagen }} 
+              style={styles.eventImage} 
+            />
+            <Text style={styles.eventTitle}>{evento.nombre}</Text>
+            {/* <Text style={styles.eventDescription}>{evento.descripcion}</Text> */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+              <Image
+                source={evento.fotoPerfil ? { uri: evento.fotoPerfil } : defaultProfileImage}
+                style={{ width: 30, height: 30, borderRadius: 15, marginRight: 10 }}
               />
-              <Text style={styles.eventTitle}>{evento.nombre}</Text>
-              <Text style={styles.eventDescription}>{evento.descripcion}</Text>
-              <Text style={styles.eventType}>{evento.tipoEvento}</Text>
-              <Text style={styles.categoryEventName}>{evento.categoriaNombre}</Text>
-              <Text style={styles.eventDate}>Del {evento.fechaInicio} Al {evento.fechaFin}</Text>
-
-              {/* Icono de mapa para abrir la ubicación en Google Maps */}
-              <TouchableOpacity style={styles.locationIconEventCity} onPress={() => openMap(evento.ubicacion)}>
-                <Image source={require('../../../assets/localizacion.png')} style={styles.locationIconEvent} />
-                <Text>{evento.ciudad}</Text>
-              </TouchableOpacity>
-
-              {/* Al pulsar sobre un evento, ir a la pantalla EventoScreen */}
-              <TouchableOpacity onPress={() => handleEventPress(evento)}>
-                <Text style={styles.viewEventText}>Ver evento</Text>
-              </TouchableOpacity>
+              <Text style={{ color: '#000', fontWeight: 'bold', paddingHorizontal: 3, paddingVertical: 7 }}>
+                {evento.usuarioNombre || 'Usuario desconocido'}
+              </Text>
             </View>
-          ))}
-        </TouchableOpacity>
+            <Text style={styles.eventType}>Evento {evento.tipoEvento}</Text>
+            <Text style={styles.categoryEventName}>Tipo: {evento.categoriaNombre}</Text>
+            <Text style={styles.eventDate}>Del {evento.fechaInicio} al {evento.fechaFin}</Text>
+          </TouchableOpacity>
+        ))}
+  </View>
       </ScrollView>
 
       {/* Boton localizaciones cercanas */}
@@ -178,7 +165,7 @@ export function HomeScreen() {
           end={{ x: 1, y: 1 }}
           style={styles.gradientBorder}
         >
-          <TouchableOpacity style={styles.backgroundContainer}> {/* onPress={() => navigation.navigate('SearchNearbyLocation')}> */}
+          <TouchableOpacity style={styles.backgroundContainer} onPress={() => navigation.navigate('SearchNearbyLocation')}>
             <Image
               source={require('../../../assets/direccion-vector.png')}
               style={styles.iconLocationImage}
@@ -197,37 +184,6 @@ export function HomeScreen() {
         </LinearGradient>
       </View>
     </View>
-
-// Boton para ver las ubicaciones beta no finalizado por falta de tiempo
-    // {/* Boton localizaciones cercanas */}
-    //   <View style={styles.buttonLocation}>
-    //   <LinearGradient
-    //     colors={['#22c55e', '#9333ea']}
-    //     start={{ x: 0, y: 0 }}
-    //     end={{ x: 1, y: 1 }}
-    //     style={styles.gradientBorder}
-    //   >
-    //     <TouchableOpacity style={styles.backgroundContainer} onPress={() => navigation.navigate('SearchNearbyLocation')}>
-    //       <Image
-    //         source={require('../../../assets/direccion-vector.png')}
-    //         style={styles.iconLocationImage}
-    //       />
-    //       <View style={styles.containerTextButton}>
-    //         <Text style={styles.nearEvents}>Eventos cerca de</Text>
-    //         {/* Mostrar la ciudad obtenida */}
-    //         <Text style={styles.nearEventsLocation}>
-    //           {location ? ${city} : 'Cargando...'}
-    //         </Text>
-    //       </View>
-    //       <View style={styles.iconArrowUpImageContainer}>
-    //         <Image
-    //           source={require('../../../assets/flecha.png')}
-    //           style={styles.iconArrowUpImage}
-    //         />
-    //       </View>
-    //     </TouchableOpacity>
-    //   </LinearGradient>
-    // </View>
 
   );
 }
@@ -444,5 +400,15 @@ const styles = StyleSheet.create({
   locationIconEventCity: {
     flexDirection: 'row',
     alignItems: 'center'
-  }
+  },
+  profileButton: {
+    borderRadius: 25,
+    overflow: 'hidden',
+  },
+
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
 });

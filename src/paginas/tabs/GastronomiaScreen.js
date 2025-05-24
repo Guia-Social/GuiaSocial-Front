@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking } 
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import CONFIG from '../ip';
 
 // Importo el mock para los eventos
 import EventoMock from '../../mocks/EventoMock.json';
@@ -23,7 +24,7 @@ export function GastronomiaScreen() {
         }
   
         // Recordad cambiar la ip
-        const response = await fetch('http://192.168.0.31:8080/api/v1/evento/categoria/14', {
+        const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/evento/categoria/14`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

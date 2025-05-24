@@ -53,7 +53,7 @@ export function EventosDelDiaScreen() {
           style={styles.gradientBorderHeader}
         >
           <TouchableOpacity style={styles.filterFoodButton}>
-            <Text style={styles.filterFood}>Eventos del día: {date}</Text>
+            <Text style={styles.filterFood}>Eventos del {date}</Text>
           </TouchableOpacity>
         </LinearGradient>
       </View>

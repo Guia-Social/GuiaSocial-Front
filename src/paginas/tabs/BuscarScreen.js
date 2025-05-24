@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, Alert, ActivityIndicator, Image } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons"; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CONFIG from '../ip';
 
 export function BuscarScreen() {
   const navigation = useNavigation();
@@ -27,7 +28,7 @@ export function BuscarScreen() {
       }
 
       // Cambiar la IP si es necesario
-      const response = await fetch(`http://192.168.0.31:8080/api/v1/evento/nombre/${nombre}`, {
+      const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/evento/nombre/${nombre}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -62,9 +63,14 @@ export function BuscarScreen() {
   };
 
   // Navegar a la pantalla seleccionada
-  const navigateToEvent = (screen) => {
-    navigation.navigate(screen);
+  const handleEventPress = (evento) => {
+    if (!evento || !evento.id) {
+      Alert.alert('Error', 'Evento no válido');
+      return;
+    }
+    navigation.navigate('EventoScreen', { evento });
   };
+
 
   return (
     <View style={styles.container}>
@@ -109,9 +115,22 @@ export function BuscarScreen() {
               <TouchableOpacity 
                 key={index} 
                 style={styles.resultItem}
-                onPress={() => navigateToEvent(result.screen)}
+                // onPress={() => navigation.navigate('EventoScreen', { eventoId: result.id })}
+                onPress={() => handleEventPress(result)}
+
+                // onPress={() => navigateToEvent(result.screen)}
               >
                 <Text style={styles.resultText}>{result.nombre}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+                  <Image
+                    source={result.fotoPerfil ? { uri: result.fotoPerfil } : defaultProfileImage}
+                    style={{ width: 30, height: 30, borderRadius: 15, marginRight: 10 }}
+                  />
+                  <Text style={{ color: '#000', fontWeight: 'bold', paddingHorizontal: 3, paddingVertical: 7 }}>
+                    {result.usuarioNombre || 'Usuario desconocido'}
+                  </Text>
+                  <Text style={styles.eventDate}>Del {result.fechaInicio} al {result.fechaFin}</Text>
+                </View>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -159,6 +178,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginRight: 8,
+  },
+
+  eventDate: {
+    paddingHorizontal: 10,
+    color: '#000000',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 
   searchBox: {
@@ -230,8 +256,10 @@ const styles = StyleSheet.create({
   },
 
   resultText: {
-    fontSize: 16,
+    fontSize: 24,
     color: '#333',
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
 
   noResults: {
