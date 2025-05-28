@@ -1,36 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Linking, ActivityIndicator, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';  // Importación de Ionicons
+import { Ionicons } from '@expo/vector-icons';
+import CONFIG from '../ip';
 
-// Importo el mock para los eventos
-import EventoMock from '../../mocks/EventoMock.json';
+const defaultProfileImage = require('../../../assets/logoGiraldillo.png');
 
 export function EventosDelDiaScreen() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { date } = route.params;  // Obtenemos la fecha pasada como parámetro
+  const { dia, mes } = route.params;
+
   const [eventos, setEventos] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Convertimos la fecha seleccionada a un objeto Date
-    const selectedDate = new Date(date);
+    const fetchEventos = async () => {
+      setLoading(true);
 
-    // Filtramos los eventos que incluyen la fecha seleccionada en su intervalo de fechas
-    const eventosDelDia = EventoMock.filter(evento => {
-      const fechaInicio = new Date(evento.fechaInicio);
-      const fechaFin = new Date(evento.fechaFin);
-      
-      // Comprobamos si la fecha seleccionada está dentro del intervalo
-      return selectedDate >= fechaInicio && selectedDate <= fechaFin;
-    });
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          Alert.alert('Error', 'No hay un token disponible.');
+          return;
+        }
 
-    setEventos(eventosDelDia);
-  }, [date]);
+        const page = 0;
+        const size = 10;
+
+        const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/evento/fecha/${mes}-${dia}?page=${page}&size=${size}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error HTTP! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Eventos obtenidos:', data); // Verifica en consola qué devuelve la API
+
+        if (Array.isArray(data.content)) {
+          setEventos(data.content);
+        } else {
+          setEventos([]);
+        }
+
+      } catch (error) {
+        console.error('Error obteniendo eventos:', error);
+        setEventos([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEventos();
+  }, [dia, mes]);
 
   const openMap = (url) => {
-    // Usamos Linking para abrir el enlace en Google Maps
     Linking.openURL(url).catch(err => console.error("No se pudo abrir la ubicación", err));
   };
 
@@ -38,12 +70,16 @@ export function EventosDelDiaScreen() {
     navigation.navigate('Home');
   };
 
+  const handleEventPress = (evento) => {
+    console.log(evento); // Asegúrate de que este objeto contenga latitud y longitud
+    navigation.navigate('EventoScreen', { evento });
+  };  
+
   return (
     <View style={styles.container}>
-      {/* Cabecera */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.homeButton} onPress={goHome}>
-          <Ionicons name="home" size={30} color="#fff" /> {/* Icono de Ionicons */}
+          <Ionicons name="home" size={30} color="#fff" />
         </TouchableOpacity>
 
         <LinearGradient
@@ -52,45 +88,62 @@ export function EventosDelDiaScreen() {
           end={{ x: 1, y: 1 }}
           style={styles.gradientBorderHeader}
         >
-          <TouchableOpacity style={styles.filterFoodButton}>
-            <Text style={styles.filterFood}>Eventos del día: {date}</Text>
+          <TouchableOpacity style={styles.filterFoodButton} onPress={() => navigation.navigate('Calendario')}>
+            <Text style={styles.filterFood}>Eventos del {dia}/{mes}</Text>
           </TouchableOpacity>
         </LinearGradient>
       </View>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.eventCategories}>
-        {/* Agregar botones de categorías si lo deseas */}
-      </ScrollView>
-
-      <ScrollView>
-        <View style={styles.eventList}>
-          {eventos.length > 0 ? (
-            eventos.map((evento) => (
-              <View key={evento.eventoId} style={styles.eventCard}>
+      {loading ? (
+        <ActivityIndicator size="large" color="#22c55e" style={{ marginTop: 20 }} />
+      ) : (
+        <ScrollView>
+          <View style={styles.eventList}>
+            {eventos.length > 0 ? (
+              eventos.map((evento) => (
+                <View style={styles.eventList}>
+                          {eventos.map((evento) => (
+                            <TouchableOpacity
+                              key={evento.eventoId}
+                              style={styles.eventCard}
+                              onPress={() => handleEventPress(evento)}
+                              activeOpacity={0.8}
+                            >
+                              <Image 
+                                source={{ uri: evento.imagen }} 
+                                style={styles.eventImage} 
+                              />
+                              <Text style={styles.eventTitle}>{evento.nombre}</Text>
+                              {/* <Text style={styles.eventDescription}>{evento.descripcion}</Text> */}
+                              <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+                                <Image
+                                  source={evento.fotoPerfil ? { uri: evento.fotoPerfil } : defaultProfileImage}
+                                  style={{ width: 30, height: 30, borderRadius: 15, marginRight: 10 }}
+                                />
+                                <Text style={{ color: '#000', fontWeight: 'bold', paddingHorizontal: 3, paddingVertical: 7 }}>
+                                  {evento.usuarioNombre || 'Usuario desconocido'}
+                                </Text>
+                              </View>
+                              <Text style={styles.eventType}>Evento {evento.tipoEvento}</Text>
+                              <Text style={styles.categoryEventName}>Tipo: {evento.categoriaNombre}</Text>
+                              <Text style={styles.eventDate}>Del {evento.fechaInicio} al {evento.fechaFin}</Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+              ))
+            ) : (
+              <View>
                 <Image
-                  source={{ uri: evento.imagen }} // Asegúrate de tener la imagen correcta
-                  style={styles.eventImage}
-                />
-                <Text style={styles.eventTitle}>{evento.nombre}</Text>
-                <Text style={styles.eventDescription}>{evento.descripcion}</Text>
-                <Text style={styles.eventType}>{evento.tipo_de_evento}</Text>
-                <Text style={styles.categoryEventName}>{evento.nombre_categoria}</Text>
-                <Text style={styles.eventDate}>Del {evento.fechaInicio} Al {evento.fechaFin}</Text>
-
-                {/* Icono de mapa para abrir la ubicación en Google Maps */}
-                <TouchableOpacity style={styles.locationIconEventCity} onPress={() => openMap(evento.ubicacion)}>
-                  <Image source={require('../../../assets/localizacion.png')} style={styles.locationIconEvent} />
-                  <Text>{evento.ciudad}</Text>
-                </TouchableOpacity>
+                          source={defaultProfileImage}
+                          style={styles.logo}
+                        />
+              <Text style={styles.noEventsText}>No hay eventos para este día</Text>
               </View>
-            ))
-          ) : (
-            <Text style={styles.noEventsText}>No hay eventos para este día</Text>
-          )}
-        </View>
-      </ScrollView>
+            )}
+          </View>
+        </ScrollView>
+      )}
 
-      {/* Botón localizaciones cercanas */}
       <View style={styles.buttonLocation}>
         <LinearGradient
           colors={['#22c55e', '#9333ea']}
@@ -119,6 +172,8 @@ export function EventosDelDiaScreen() {
     </View>
   );
 }
+
+// ... tus estilos aquí como ya los tengas
 
 const styles = StyleSheet.create({
   container: {
@@ -150,6 +205,13 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingVertical: 2,
     paddingHorizontal: 2,
+  },
+
+  logo: {
+    width: 200,
+    height: 200,
+    borderRadius: 20,
+    alignSelf: 'center',
   },
 
   filterFoodButton: {
@@ -209,8 +271,9 @@ const styles = StyleSheet.create({
 
   eventImage: {
     width: '100%',
-    borderRadius: 15,
-    marginBottom: 10,
+    height: 200,
+    borderRadius: 10,
+    resizeMode: 'cover', 
   },
 
   eventTitle: {

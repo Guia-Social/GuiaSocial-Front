@@ -9,6 +9,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import debounce from 'lodash.debounce';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CONFIG from '../ip';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as Location from 'expo-location'; // Usamos expo-location para permisos y ubicación
 
 
@@ -32,6 +34,7 @@ export function AnadirScreen() {
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
+  const [userName, setUserName] = useState(''); // Estado para guardar el nombre del usuario
   const navigation = useNavigation();
 
   const onDateChange = (event, selectedDate, tipoFecha) => {
@@ -100,6 +103,35 @@ export function AnadirScreen() {
     }
   }, [direccion]);
 
+  useEffect(() => {
+    // Función para obtener el nombre del usuario desde la API
+    const fetchUserData = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token'); // Recuperar el token
+            if (token) {
+                const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/user/me`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Enviar el token en el header
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json(); // Parsear la respuesta a JSON
+                    setUserName(data.username); // Suponiendo que la API devuelve un campo 'username'
+                } else {
+                    console.error('Error fetching user data:', response.statusText);
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching user data: ', error);
+        }
+    };
+
+    fetchUserData();
+}, []);
+
   // Solicitamos permisos para acceder a la cámara y la galería
   const obtenerPermisoCamara = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync(); // Usar 'requestCameraPermissionsAsync'
@@ -156,68 +188,131 @@ export function AnadirScreen() {
     );
   };
 
+  // const crearEvento = async () => {
+  //   if (!nombre || !descripcion || !categoria || !fechaInicio || !fechaFin || !direccion || !imagen || !tipoEvento || !ciudad) {
+  //     setError('Por favor, completa todos los campos.');
+  //     return;
+  //   }
+  
+  //   setError('');
+  
+  //   try {
+  //     const token = await AsyncStorage.getItem('token'); // Obtener el token
+  
+  //     if (!token) {
+  //       Alert.alert('Error', 'No se encontró el token de autenticación. Inicia sesión nuevamente.');
+  //       return;
+  //     }
+  
+  //     const eventoData = {
+  //       nombre: nombre,
+  //       descripcion: descripcion,
+  //       categoriaNombre: categoria,
+  //       tipoEvento: tipoEvento,
+  //       fechaInicio: fechaInicio.toISOString(),
+  //       fechaFin: fechaFin.toISOString(),
+  //       ubicacion: direccion,
+  //       ciudadNombre: ciudad,
+  //       imagen: imagen,
+  //       usuarioNombre: userName
+  //     };
+  
+  //     const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/evento/create`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${token}` // Agregar el token en la cabecera
+  //       },
+  //       body: JSON.stringify(eventoData)
+  //     });
+
+  //     // const data = await response.json();
+  
+  //     // ⚠️ Verifica si la respuesta tiene contenido antes de parsearla
+  //     const responseText = await response.text(); 
+  //     console.log('Respuesta del servidor:', responseText);
+
+  //     if (!responseText) {
+  //       throw new Error('El servidor devolvió una respuesta vacía.');
+  //     }
+
+  //     const data = JSON.parse(responseText); // Solo intentar parsear si hay contenido
+  
+  //     if (response.ok) {
+  //       Alert.alert('Éxito', 'Evento creado correctamente.');
+  //       navigation.navigate('Home');
+  //     } else {
+  //       setError(data.message || 'Error al crear el evento');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error al crear evento:', error);
+  //     setError('Error al conectar con el servidor.');
+  //   }
+  // };
+
   const crearEvento = async () => {
     if (!nombre || !descripcion || !categoria || !fechaInicio || !fechaFin || !direccion || !imagen || !tipoEvento || !ciudad) {
       setError('Por favor, completa todos los campos.');
       return;
     }
-  
+
     setError('');
-  
+
     try {
-      const token = await AsyncStorage.getItem('token'); // Obtener el token
-  
+      const token = await AsyncStorage.getItem('token');
+
       if (!token) {
         Alert.alert('Error', 'No se encontró el token de autenticación. Inicia sesión nuevamente.');
         return;
       }
-  
-      const eventoData = {
-        nombre: nombre,
-        descripcion: descripcion,
-        categoriaNombre: categoria,
-        tipoEvento: tipoEvento,
-        fechaInicio: fechaInicio.toISOString(),
-        fechaFin: fechaFin.toISOString(),
-        ubicacion: direccion,
-        ciudadNombre: ciudad,
-        imagen: imagen,
-        usuarioNombre: "admin" //Provisional
-      };
-  
-      const response = await fetch('http://192.168.0.31:8080/api/v1/evento/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Agregar el token en la cabecera
-        },
-        body: JSON.stringify(eventoData)
+
+      const formData = new FormData();
+
+      formData.append('nombre', nombre);
+      formData.append('descripcion', descripcion);
+      formData.append('categoriaNombre', categoria);
+      formData.append('tipoEvento', tipoEvento);
+      // Por algun motivo al obtener la fecha pues se pone una Z al final, la elimino
+      formData.append('fechaInicio', fechaInicio.toISOString().replace('Z', ''));
+      formData.append('fechaFin', fechaFin.toISOString().replace('Z', ''));
+      formData.append('ubicacion', direccion);
+      formData.append('ciudadNombre', ciudad);
+      formData.append('usuarioNombre', userName);
+
+      // Añadir imagen como archivo
+      const fileName = imagen.split('/').pop();
+      const fileType = fileName.split('.').pop();
+
+      formData.append('imagen', {
+        uri: imagen,
+        name: fileName,
+        type: `image/${fileType}`,
       });
 
-      // const data = await response.json();
-  
-      // ⚠️ Verifica si la respuesta tiene contenido antes de parsearla
-      const responseText = await response.text(); 
+      const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/evento/create`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data', // Especificamos que es multipart
+        },
+        body: formData,
+      });
+
+      const responseText = await response.text();
       console.log('Respuesta del servidor:', responseText);
 
-      if (!responseText) {
-        throw new Error('El servidor devolvió una respuesta vacía.');
+      if (!response.ok) {
+        throw new Error(responseText || 'Error al crear el evento');
       }
 
-      const data = JSON.parse(responseText); // Solo intentar parsear si hay contenido
-  
-      if (response.ok) {
-        Alert.alert('Éxito', 'Evento creado correctamente.');
-        navigation.navigate('Home');
-      } else {
-        setError(data.message || 'Error al crear el evento');
-      }
+      Alert.alert('Éxito', 'Evento creado correctamente.');
+      navigation.navigate('Home');
+      
     } catch (error) {
       console.error('Error al crear evento:', error);
       setError('Error al conectar con el servidor.');
     }
   };
-  
 
   return (
     <ScrollView style={styles.container}>
@@ -257,7 +352,7 @@ export function AnadirScreen() {
             <Picker.Item label="Vida Nocturna" value="vida nocturna" />
             <Picker.Item label="Turismo" value="turismo" />
             <Picker.Item label="Música" value="musica" />
-            <Picker.Item label="Teatro y Espectáculos" value="teatro" />
+            <Picker.Item label="Teatro y Espectáculos" value="teatro y espectaculos" />
           </Picker>
         </View>
 
@@ -351,7 +446,7 @@ export function AnadirScreen() {
         
         <View style={styles.pickerContainer}>
           <Picker selectedValue={tipoEvento} onValueChange={(itemValue) => setTipoEvento(itemValue)} style={styles.picker}>
-            <Picker.Item label="Tipo de evento" value="" />
+            {/* <Picker.Item label="Tipo de evento" value="" /> */}
             <Picker.Item label="Amigos" value="amigos" />
             <Picker.Item label="VIP" value="vip" />
             <Picker.Item label="Ayuntamiento" value="ayuntamiento" />
@@ -359,8 +454,14 @@ export function AnadirScreen() {
         </View>
 
         {/* Botón para crear evento */}
-        <TouchableOpacity onPress={crearEvento} style={styles.buttonEvento}>
+        {/* <TouchableOpacity onPress={crearEvento} style={styles.buttonEvento}>
           <Text style={styles.buttonText}>Crear Evento</Text>
+        </TouchableOpacity> */}
+
+        <TouchableOpacity onPress={crearEvento}>
+          <LinearGradient colors={['#22c55e', '#9333ea']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.buttonEvento}>
+            <Text style={styles.buttonText}>Crear Evento</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -437,7 +538,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonEvento: {
-    backgroundColor: '#323639',
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
