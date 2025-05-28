@@ -6,6 +6,7 @@ import MapView, { Marker } from 'react-native-maps';
 
 export function EventoScreen({ route, navigation }) {
   const { evento } = route.params;
+  const defaultProfileImage = require("../../../assets/logoGiraldillo.png");
 
   const [ubicacion, setUbicacion] = useState({ latitude: 37.3886, longitude: -5.9823 });
   const [region, setRegion] = useState({

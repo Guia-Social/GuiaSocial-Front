@@ -12,17 +12,19 @@ export function CalendarScreen() {
     for (let i = 0; i < 31; i++) {
       const dateCopy = new Date(currentDate);
       dateCopy.setDate(currentDate.getDate() + i);
-      const formattedDate = dateCopy.toLocaleDateString('es-ES', {
-        weekday: 'long', 
-        day: 'numeric', 
-        month: 'long'
-      });
-      dates.push(formattedDate);
+      // No formatear aquí a string completo, mejor enviar el objeto Date directamente
+      dates.push(new Date(dateCopy));
     }
     return dates;
   };
 
   const dates = getDates();
+
+  const handleDatePress = (dateObj) => {
+    const dia = dateObj.getDate();
+    const mes = dateObj.getMonth() + 1;
+    navigation.navigate('EventosDelDia', { dia, mes });
+  };
 
   return (
     <View style={styles.container}>
@@ -38,15 +40,22 @@ export function CalendarScreen() {
           <TouchableOpacity 
             key={index} 
             style={styles.dateButton}
-            onPress={() => navigation.navigate('EventosDelDia', { date })} // Pasamos la fecha seleccionada
+            onPress={() => handleDatePress(date)}  // Aquí enviamos el objeto date
           >
-            <Text style={styles.dateText}>{date}</Text>
+            <Text style={styles.dateText}>{date.toLocaleDateString('es-ES', {
+              weekday: 'long', 
+              day: 'numeric', 
+              month: 'long'
+            })}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
   );
 }
+
+// ... (styles igual que antes)
+
 
 const styles = StyleSheet.create({
   container: {
@@ -90,4 +99,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-

@@ -5,6 +5,8 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CONFIG from '../ip';
 
+const defaultProfileImage = require('../../../assets/logoGiraldillo.png');
+
 export function BuscarScreen() {
   const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
