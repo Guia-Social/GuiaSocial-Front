@@ -20,13 +20,21 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logoGiraldillo",
+        "foregroundImage": "./assets/logoGiraldillo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.GuiaSocial"
     },
     "web": {
       "favicon": "./assets/logoGiraldillo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6339d8e4-f585-43e4-8e89-8dff271cdf0b"
+      }
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
     }
   }
 }
