@@ -26,7 +26,7 @@ export default function App() {
       const userLoggedIn = await AsyncStorage.getItem('isLoggedIn');
       if (userLoggedIn === 'true') {
         setIsLoggedIn(true); // Si el valor es true, el usuario está logueado
-        console.log(`El usuario está logueado`);
+        console.log('El usuario está logueado');
       } else {
         setIsLoggedIn(false);
       }

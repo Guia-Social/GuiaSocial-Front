@@ -23,7 +23,29 @@
         "foregroundImage": "./assets/logoGiraldillo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.GuiaSocial"
+      "package": "com.anonymous.GuiaSocial",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "READ_CONTACTS",
+        "WRITE_CONTACTS",
+        "READ_CALENDAR",
+        "WRITE_CALENDAR",
+        "VIBRATE",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "ACCESS_WIFI_STATE",
+        "FOREGROUND_SERVICE",
+        "REQUEST_INSTALL_PACKAGES",
+        "ACCESS_MEDIA_LOCATION",
+        "POST_NOTIFICATIONS",
+        "ACCESS_NOTIFICATION_POLICY",
+        "WAKE_LOCK"
+      ]
     },
     "web": {
       "favicon": "./assets/logoGiraldillo.png"
@@ -34,7 +56,11 @@
       }
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/6339d8e4-f585-43e4-8e89-8dff271cdf0b"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }
