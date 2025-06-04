@@ -47,6 +47,29 @@
         "WAKE_LOCK"
       ]
     },
+    "plugins": [
+      "expo-location",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Esta aplicación necesita acceso a tus fotos para seleccionar imágenes.",
+          "cameraPermission": "Esta aplicación necesita acceso a tu cámara para tomar fotos."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0"
+          },
+          "ios": {
+            "deploymentTarget": "16.4"
+          }
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/logoGiraldillo.png"
     },
