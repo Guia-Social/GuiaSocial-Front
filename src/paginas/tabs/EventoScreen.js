@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Linking } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import debounce from 'lodash.debounce';
 import MapView, { Marker } from 'react-native-maps';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CONFIG from '../ip';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export function EventoScreen({ route, navigation }) {
   const { evento } = route.params;
@@ -17,6 +20,10 @@ export function EventoScreen({ route, navigation }) {
   });
   const [direccion, setDireccion] = useState(evento.ubicacion || '');
   const [error, setError] = useState('');
+
+  const [usuarioLogeadoID, setUsuarioLogeadoID] = useState(null);
+  const [nombreUsuario, setNombreUsuario] = useState('');
+  const [estaApuntado, setEstaApuntado] = useState(false);
 
   const API_KEY = 'a169ac268a904bb694f11b32f20dbc55';
 
@@ -60,6 +67,91 @@ export function EventoScreen({ route, navigation }) {
 
   const obtenerUbicacionDebounced = debounce(obtenerUbicacion, 1000);
 
+  const apuntarse = async () => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      console.error('No se encontró el token');
+      return;
+    }
+
+    const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/usuarioEnEventos/apuntarse/${usuarioLogeadoID}/${evento.id}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      console.log('Te has apuntado al evento');
+      setEstaApuntado(true); // Estado local si lo usas
+    } else {
+      console.error('Error al apuntarse:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error al apuntarse: ', error);
+  }
+};
+
+const desapuntarse = async () => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      console.error('No se encontró el token');
+      return;
+    }
+
+    const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/usuarioEnEventos/desapuntarse/${usuarioLogeadoID}/${evento.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      console.log('Te has desapuntado del evento');
+      setEstaApuntado(false); // Estado local si lo usas
+    } else {
+      console.error('Error al desapuntarse:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error al desapuntarse: ', error);
+  }
+};
+
+  const comprobarSiEstaApuntado = async (userId) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      console.error('No se encontró el token');
+      return;
+    }
+
+    // Comprobar si ha recibido bien del fetch user data el id, porque no veas
+    console.log('Usuario ID:', userId);
+    console.log('Evento ID:', evento.id);
+
+    const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/usuarioEnEventos/apuntado/${userId}/${evento.id}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      setEstaApuntado(result); // true o false
+    } else {
+      console.error('Error al comprobar si estás apuntado:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error al comprobar si estás apuntado: ', error);
+  }
+};
+
   useEffect(() => {
     if (direccion.trim()) {
       obtenerUbicacionDebounced(direccion);
@@ -75,6 +167,60 @@ export function EventoScreen({ route, navigation }) {
     }
   }, [direccion]);
 
+  useEffect(() => {
+          // Función para obtener el nombre del usuario desde la API
+          const fetchUserData = async () => {
+              try {
+                  const token = await AsyncStorage.getItem('token'); // Recuperar el token
+                  console.log('Token que se está enviando:', token);
+                  if (token) {
+                      const response = await fetch(`http://${CONFIG.IP}:8080/api/v1/user/me`, {
+                          method: 'GET',
+                          headers: {
+                              'Authorization': `Bearer ${token}`, // Enviar el token en el header
+                              'Content-Type': 'application/json',
+                          }
+                      });
+  
+                      if (response.ok) {
+                          const data = await response.json();
+                          setUsuarioLogeadoID(data.userId);
+                          setNombreUsuario(data.username);
+
+                          console.log('NOMBRE del usuario logueado:', data.username);
+
+                          // Una vez que el ID del usuario se ha obtenido correctamente,
+                          // ahora sí llamamos a comprobarSiEstaApuntado
+                          comprobarSiEstaApuntado(data.userId);
+
+                      } else {
+                          console.error('Error fetching user data:', response.statusText);
+                      }
+                  }
+              } catch (error) {
+                  console.error('Error fetching user data: ', error);
+              }
+          };
+  
+          fetchUserData();
+      }, []);
+
+      const eliminarEvento = async (eventoId) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    await fetch(`http://${CONFIG.IP}:8080/api/v1/evento/eliminar/${eventoId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    navigation.navigate('Home'); // O 'Profile' si prefieres volver ahí
+  } catch (error) {
+    console.error('Error al eliminar el evento:', error);
+  }
+};
+
+
   return (
     <View style={styles.container}>
       {/* Barra de título */}
@@ -89,7 +235,9 @@ export function EventoScreen({ route, navigation }) {
         <Image source={{ uri: evento.imagen }} style={styles.eventImage} />
 
         {/* Nombre del usuario y foto de perfil */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, justifyContent: 'space-between' }}>
+          {/* Con el estilo de arriba aplica para que salga cada uno en una esquina, y el de abajo para que el nombre y la foto salgan juntitos */}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Image
             source={evento.fotoPerfil ? { uri: evento.fotoPerfil } : defaultProfileImage}
             style={{ width: 40, height: 40, borderRadius: 15, marginRight: 10 }}
@@ -97,6 +245,24 @@ export function EventoScreen({ route, navigation }) {
           <Text style={{ color: '#000', paddingHorizontal: 3, paddingVertical: 7, fontSize: 24 }}>
             {evento.usuarioNombre || 'Usuario desconocido'}
           </Text>
+          </View>
+
+          <TouchableOpacity onPress={estaApuntado ? desapuntarse : apuntarse}>
+            <LinearGradient
+              colors={estaApuntado ? ['#f87171', '#ef4444'] : ['#22c55e', '#9333ea']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                borderRadius: 10,
+              }}
+            >
+              <Text style={{ color: '#fff', fontWeight: 'bold' }}>
+                {estaApuntado ? 'Desapuntarse' : 'Apuntarse'}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
 
         {/* Detalles del evento */}
@@ -126,6 +292,31 @@ export function EventoScreen({ route, navigation }) {
 
         {/* Fechas de inicio y fin */}
         <Text style={styles.eventDate}>Del {evento.fechaInicio} al {evento.fechaFin}</Text>
+
+  {nombreUsuario &&
+  nombreUsuario === evento.usuarioNombre && (
+    <TouchableOpacity
+      onPress={() =>
+        Alert.alert(
+          '¿Eliminar evento?',
+          'Esta acción no se puede deshacer.',
+          [
+            { text: 'Cancelar', style: 'cancel' },
+            {
+              text: 'Eliminar',
+              onPress: () => eliminarEvento(evento.id),
+              style: 'destructive'
+            },
+          ]
+        )
+      }
+      style={{ marginTop: 20, alignSelf: 'center' }}
+    >
+      <Text style={{ color: 'red', fontWeight: 'bold' }}>Eliminar Evento</Text>
+    </TouchableOpacity>
+)}
+
+
       </ScrollView>
     </View>
   );

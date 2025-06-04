@@ -20,13 +20,70 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logoGiraldillo",
+        "foregroundImage": "./assets/logoGiraldillo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.GuiaSocial"
+      "package": "com.anonymous.GuiaSocial",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "READ_CONTACTS",
+        "WRITE_CONTACTS",
+        "READ_CALENDAR",
+        "WRITE_CALENDAR",
+        "VIBRATE",
+        "INTERNET",
+        "ACCESS_NETWORK_STATE",
+        "ACCESS_WIFI_STATE",
+        "FOREGROUND_SERVICE",
+        "REQUEST_INSTALL_PACKAGES",
+        "ACCESS_MEDIA_LOCATION",
+        "POST_NOTIFICATIONS",
+        "ACCESS_NOTIFICATION_POLICY",
+        "WAKE_LOCK"
+      ]
     },
+    "plugins": [
+      "expo-location",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Esta aplicación necesita acceso a tus fotos para seleccionar imágenes.",
+          "cameraPermission": "Esta aplicación necesita acceso a tu cámara para tomar fotos."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0"
+          },
+          "ios": {
+            "deploymentTarget": "16.4"
+          }
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/logoGiraldillo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6339d8e4-f585-43e4-8e89-8dff271cdf0b"
+      }
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/6339d8e4-f585-43e4-8e89-8dff271cdf0b"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }

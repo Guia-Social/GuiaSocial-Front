@@ -14,6 +14,7 @@ import { LoginScreen } from './src/paginas/LoginScreen';
 import { RegisterScreen } from './src/paginas/RegisterScreen';
 import { EventosDelDiaScreen } from './src/paginas/tabs/EventosDelDiaScreen';
 import { AnadirScreen } from './src/paginas/tabs/AnadirScreen';
+import 'react-native-gesture-handler';
 
 const Stack = createStackNavigator();
 
@@ -25,7 +26,7 @@ export default function App() {
       const userLoggedIn = await AsyncStorage.getItem('isLoggedIn');
       if (userLoggedIn === 'true') {
         setIsLoggedIn(true); // Si el valor es true, el usuario está logueado
-        console.log(`El usuario está logueado`);
+        console.log('El usuario está logueado');
       } else {
         setIsLoggedIn(false);
       }

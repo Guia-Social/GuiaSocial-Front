@@ -102,7 +102,6 @@ export function EventosDelDiaScreen() {
             {eventos.length > 0 ? (
               eventos.map((evento) => (
                 <View style={styles.eventList}>
-                          {eventos.map((evento) => (
                             <TouchableOpacity
                               key={evento.eventoId}
                               style={styles.eventCard}
@@ -128,7 +127,6 @@ export function EventosDelDiaScreen() {
                               <Text style={styles.categoryEventName}>Tipo: {evento.categoriaNombre}</Text>
                               <Text style={styles.eventDate}>Del {evento.fechaInicio} al {evento.fechaFin}</Text>
                             </TouchableOpacity>
-                          ))}
                         </View>
               ))
             ) : (
