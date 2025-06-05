@@ -1,0 +1,17 @@
+[
+    {
+        "tipoId" : "1",
+        "nombre" : "Vip",
+        "eventos" : [1, 2]
+    },
+    {
+        "tipoId" : "2",
+        "nombre" : "Amigos",
+        "eventos" : []
+    },
+    {
+        "tipoId" : "3",
+        "nombre" : "Ayuntamiento",
+        "eventos" : []
+    }
+]
