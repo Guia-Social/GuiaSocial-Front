@@ -23,6 +23,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.GuiaSocial",
+      "usesCleartextTraffic": true,
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
@@ -78,7 +79,8 @@
       }
     },
     "updates": {
-      "fallbackToCacheTimeout": 0,
+      "enabled": true,
+      "fallbackToCacheTimeout": 10000,
       "url": "https://u.expo.dev/6339d8e4-f585-43e4-8e89-8dff271cdf0b"
     },
     "runtimeVersion": {

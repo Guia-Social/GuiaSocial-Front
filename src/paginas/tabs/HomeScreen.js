@@ -193,6 +193,7 @@ export function HomeScreen() {
       </ScrollView>
 
       {/* Lista de eventos */}
+      {eventos.length > 0 && (
       <ScrollView>
         <View style={styles.eventList}>
           {eventos.map((evento) => (
@@ -224,6 +225,7 @@ export function HomeScreen() {
           ))}
         </View>
       </ScrollView>
+      )}
 
       {/* Boton localizaciones cercanas */}
       <View style={styles.buttonLocation}>

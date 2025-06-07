@@ -15,6 +15,9 @@ import { RegisterScreen } from './src/paginas/RegisterScreen';
 import { EventosDelDiaScreen } from './src/paginas/tabs/EventosDelDiaScreen';
 import { AnadirScreen } from './src/paginas/tabs/AnadirScreen';
 import 'react-native-gesture-handler';
+import { enableScreens } from 'react-native-screens';
+enableScreens();
+
 
 const Stack = createStackNavigator();
 
