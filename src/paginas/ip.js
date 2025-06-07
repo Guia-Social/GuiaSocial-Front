@@ -3,7 +3,8 @@
 // todas las ips de todas las consulatas desde aquí.
 
 const CONFIG = {
-    IP: "192.168.221.73",
+    IP: "51.120.112.32",
+    // IP: "192.168.221.73",
   };
   
   export default CONFIG;
