@@ -23,7 +23,6 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.GuiaSocial",
-      "usesCleartextTraffic": true,
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
@@ -45,7 +44,11 @@
         "POST_NOTIFICATIONS",
         "ACCESS_NOTIFICATION_POLICY",
         "WAKE_LOCK"
-      ]
+      ],
+      "networkSecurityConfig": {
+        "cleartextTrafficPermitted": true,
+        "trustAnchors": ["system"]
+      }
     },
     "plugins": [
       "expo-location",
@@ -79,9 +82,7 @@
       }
     },
     "updates": {
-      "enabled": true,
-      "fallbackToCacheTimeout": 10000,
-      "url": "https://u.expo.dev/6339d8e4-f585-43e4-8e89-8dff271cdf0b"
+      "enabled": false
     },
     "runtimeVersion": {
       "policy": "appVersion"
